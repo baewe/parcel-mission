@@ -65,18 +65,19 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
     const bg = isMine
       ? '#059669'
       : showCityLabel
-      ? '#B45309'
-      : '#451A03';
-    const border = showCityLabel ? '#FDE68A' : '#FFFFFF';
+      ? '#14161A'
+      : '#FFCC1F';
+    const fg = isMine || showCityLabel ? '#FFFFFF' : '#14161A';
+    const border = isMine || showCityLabel ? '#FFFFFF' : '#14161A';
 
     return `
       <div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%);">
-        <div style="width: 32px; height: 32px; border-radius: 9999px; background: ${bg}; border: 2px solid ${border}; color: #FFFFFF; font-weight: 900; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.45);">
+        <div style="width: 32px; height: 32px; border-radius: 9999px; background: ${bg}; border: 2px solid ${border}; color: ${fg}; font-weight: 900; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.45);">
           ${b.pinCircle}
         </div>
         ${
           showCityLabel
-            ? `<div style="margin-top: 2px; background: rgba(28, 25, 23, 0.92); color: #FEF3C7; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 6px; white-space: nowrap; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.4);">
+            ? `<div style="margin-top: 2px; background: rgba(28, 25, 23, 0.92); color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; white-space: nowrap; border: 1px solid rgba(255,204,31,0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.4);">
                 ${b.id}. ${b.cityName}
               </div>`
             : ''
@@ -184,7 +185,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         <button
           type="button"
           onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-[#FAF6EE] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
+          className="flex items-center gap-1 text-xs font-bold bg-[#F4F4F1] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
         >
           <BookOpen className="w-3.5 h-3.5 text-amber-700" />
           <span>내 택배 요약</span>
@@ -194,7 +195,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
       {/* My Solved Parcel Reminder */}
       <div className="bg-emerald-50 border border-emerald-400 rounded-xl px-3 py-2 flex items-center justify-between text-xs">
         <span className="font-bold text-emerald-950">
-          ✅ 내 택배({myBox.id}): {myBox.pinCircle} {myBox.cityName}({myBox.countryName})
+          내 택배({myBox.id}): {myBox.pinCircle} {myBox.cityName}({myBox.countryName})
         </span>
         <span className="font-mono font-bold text-emerald-800">
           {answeredCount} / 4 완료
@@ -202,13 +203,13 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
       </div>
 
       {/* Map displaying ①~⑤ (reveals city names as solved / all 5 when finished) */}
-      <div className="relative w-full h-[38vh] min-h-[250px] max-h-[340px] rounded-2xl overflow-hidden border-2 border-amber-900/40 shadow-lg">
+      <div className="relative w-full h-[38vh] min-h-[250px] max-h-[340px] rounded-2xl overflow-hidden border border-amber-900/40 shadow-lg">
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 
       {/* Final Score Banner when all 4 are finished */}
       {isAllFinished && (
-        <div className="bg-[#FAF3E0] border-2 border-amber-800 rounded-2xl p-4 shadow-md text-center space-y-1.5">
+        <div className="bg-[#F4F4F1] border border-amber-800 rounded-2xl p-4 shadow-md text-center space-y-1.5">
           <div className="inline-flex items-center gap-1.5 bg-amber-800 text-amber-100 px-3 py-1 rounded-full text-xs font-bold">
             <Trophy className="w-3.5 h-3.5 text-amber-300" />
             <span>원모둠 미션 완료!</span>
@@ -232,9 +233,9 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
           return (
             <div
               key={targetBox.id}
-              className={`rounded-2xl border-2 p-3.5 shadow-sm transition-all ${
+              className={`rounded-2xl border p-3.5 shadow-sm transition-all ${
                 !hasPicked
-                  ? 'bg-[#FFFDF9] border-amber-800/25'
+                  ? 'bg-[#FFFFFF] border-amber-800/25'
                   : isCorrect
                   ? 'bg-emerald-50 border-emerald-500'
                   : 'bg-rose-50 border-rose-400'
@@ -302,7 +303,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
                       type="button"
                       disabled={hasPicked}
                       onClick={() => onGuessBox(targetBox.id, pinBox.pinNumber)}
-                      className={`min-h-[44px] rounded-xl border-2 font-bold text-sm transition-all ${
+                      className={`min-h-[44px] rounded-xl border font-bold text-sm transition-all ${
                         hasPicked ? 'cursor-default' : 'cursor-pointer active:scale-95'
                       } ${btnStyle}`}
                     >

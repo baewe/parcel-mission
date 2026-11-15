@@ -46,7 +46,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   return (
     <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-4">
       {/* Assigned Role Banner: "당신은 ○○ 담당입니다" */}
-      <div className="bg-[#451A03] text-amber-50 rounded-2xl p-3.5 shadow-md flex items-center justify-between border border-amber-700">
+      <div className="bg-[#16181D] text-amber-50 rounded-2xl p-3.5 shadow-md flex items-center justify-between border border-amber-700">
         <div>
           <span className="text-[11px] font-bold text-amber-300 block">
             {box.codeName} · 개인 탐구
@@ -73,12 +73,12 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
       </div>
 
       {/* Single Assigned Document Card */}
-      <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/30 p-4 shadow-sm">
+      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 p-4 shadow-sm">
         <DocRenderer box={box} docId={docId} />
       </div>
 
       {/* Student Interpretation Input (Editable in both Step 1 and Step 2) */}
-      <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/30 p-4 shadow-sm space-y-2">
+      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 p-4 shadow-sm space-y-2">
         <label className="block text-xs font-bold text-amber-950 flex items-center justify-between">
           <span className="flex items-center gap-1.5">
             <PencilLine className="w-4 h-4 text-amber-700" />
@@ -120,7 +120,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
       {isSubmitted && (
         <div className="space-y-4">
           {/* Model Answer Card */}
-          <div className="bg-[#FAF3E0] rounded-2xl border-2 border-amber-700/50 p-4 shadow-md space-y-2">
+          <div className="bg-[#F4F4F1] rounded-2xl border border-amber-700/50 p-4 shadow-md space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-extrabold text-amber-950">
               <BookOpenCheck className="w-4 h-4 text-amber-800" />
               <span>모범 해설 ({docMeta.label})</span>
@@ -131,7 +131,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
           </div>
 
           {/* Self-check 3-choice buttons */}
-          <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/30 p-4 shadow-sm space-y-3">
+          <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 p-4 shadow-sm space-y-3">
             <div>
               <h3 className="text-xs font-black text-amber-950">
                 자기 점검: 모범 해설과 내 해석을 비교해 보세요
@@ -145,7 +145,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectSelfCheck('same')}
-                className={`min-h-[48px] py-2.5 px-2 rounded-xl border-2 text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'same'
                     ? 'bg-emerald-600 border-emerald-700 text-white shadow'
                     : 'bg-white border-amber-800/20 text-stone-800 hover:bg-emerald-50'
@@ -158,7 +158,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectSelfCheck('partial')}
-                className={`min-h-[48px] py-2.5 px-2 rounded-xl border-2 text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'partial'
                     ? 'bg-amber-600 border-amber-700 text-white shadow'
                     : 'bg-white border-amber-800/20 text-stone-800 hover:bg-amber-50'
@@ -171,7 +171,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectSelfCheck('different')}
-                className={`min-h-[48px] py-2.5 px-2 rounded-xl border-2 text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'different'
                     ? 'bg-rose-600 border-rose-700 text-white shadow'
                     : 'bg-white border-amber-800/20 text-stone-800 hover:bg-rose-50'

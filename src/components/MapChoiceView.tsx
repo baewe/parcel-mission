@@ -60,15 +60,16 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
       ? '#059669'
       : isSelected
       ? '#DC2626'
-      : '#451A03';
-    const border = isSelected || isCorrectSolved ? '#FDE68A' : '#FFFFFF';
+      : '#FFCC1F';
+    const fg = isSelected || isCorrectSolved ? '#FFFFFF' : '#14161A';
+    const border = isSelected || isCorrectSolved ? '#FFFFFF' : '#14161A';
     const scale = isSelected || isCorrectSolved ? 'scale(1.18)' : 'scale(1)';
     const shadow = isSelected
       ? '0 0 0 4px rgba(220,38,38,0.35), 0 4px 10px rgba(0,0,0,0.5)'
       : '0 3px 8px rgba(0,0,0,0.45)';
 
     return `
-      <div style="transform: ${scale}; transition: transform 150ms ease; width: 34px; height: 34px; border-radius: 9999px; background: ${bg}; border: 2.5px solid ${border}; color: #FFFFFF; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: ${shadow}; cursor: pointer;">
+      <div style="transform: ${scale}; transition: transform 150ms ease; width: 34px; height: 34px; border-radius: 9999px; background: ${bg}; border: 2.5px solid ${border}; color: ${fg}; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: ${shadow}; cursor: pointer;">
         ${pinCircle}
       </div>
     `;
@@ -213,7 +214,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
         <button
           type="button"
           onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-[#FAF6EE] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
+          className="flex items-center gap-1 text-xs font-bold bg-[#F4F4F1] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
         >
           <BookOpen className="w-3.5 h-3.5 text-amber-700" />
           <span>단서 다시보기</span>
@@ -227,7 +228,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
       </div>
 
       {/* Leaflet Satellite Map (Label-free) */}
-      <div className="relative w-full h-[46vh] min-h-[310px] max-h-[420px] rounded-2xl overflow-hidden border-2 border-amber-900/40 shadow-lg">
+      <div className="relative w-full h-[46vh] min-h-[310px] max-h-[420px] rounded-2xl overflow-hidden border border-amber-900/40 shadow-lg">
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 
@@ -245,7 +246,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
                 setSelectedPin(b.pinNumber);
                 setFeedback((prev) => (prev?.type === 'success' ? prev : null));
               }}
-              className={`min-h-[46px] rounded-xl border-2 font-black text-base transition-all cursor-pointer ${
+              className={`min-h-[46px] rounded-xl border font-black text-base transition-all cursor-pointer ${
                 isCorrectSolved
                   ? 'bg-emerald-600 border-emerald-700 text-white shadow-md'
                   : isSelected
@@ -262,7 +263,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
       {/* Feedback Message */}
       {feedback && (
         <div
-          className={`mt-3 p-3.5 rounded-xl border-2 transition-all ${
+          className={`mt-3 p-3.5 rounded-xl border transition-all ${
             feedback.type === 'success'
               ? 'bg-emerald-50 border-emerald-600 text-emerald-950 shadow-md'
               : 'bg-rose-50 border-rose-400 text-rose-950 shadow-sm'

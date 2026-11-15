@@ -30,13 +30,13 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[2000] bg-[#FBF8F1] flex flex-col"
+      className="fixed inset-0 z-[2000] bg-[#FAFAF8] flex flex-col"
       role="dialog"
       aria-modal="true"
       aria-label="단서 다시보기 전체 화면"
     >
       {/* Top Bar */}
-      <div className="bg-[#451A03] text-amber-50 px-4 py-3 flex items-center justify-between shrink-0 shadow-md">
+      <div className="bg-[#16181D] text-amber-50 px-4 py-3 flex items-center justify-between shrink-0 shadow-md">
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-amber-300" />
           <h3 className="font-black text-sm">
@@ -54,8 +54,8 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
       </div>
 
       {/* Sub-navigation Tabs */}
-      <div className="bg-[#FAF3E0] border-b border-amber-800/20 px-3 py-2 shrink-0">
-        <div className="max-w-md mx-auto grid grid-cols-4 gap-1 p-1 bg-[#EADDCA] rounded-xl">
+      <div className="bg-[#F4F4F1] border-b border-amber-800/20 px-3 py-2 shrink-0">
+        <div className="max-w-md mx-auto grid grid-cols-4 gap-1 p-1 bg-[#E6E6E1] rounded-xl">
           {docOrder.map((id) => {
             const meta = DOC_METAS[id];
             const isActive = activeTab === id;
@@ -81,14 +81,14 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
       {/* Scrollable Body */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="max-w-md mx-auto space-y-4 pb-6">
-          <div className="bg-white rounded-2xl border-2 border-amber-800/25 p-4 shadow-sm">
+          <div className="bg-white rounded-2xl border border-amber-800/25 p-4 shadow-sm">
             <DocRenderer box={box} docId={activeTab} />
           </div>
 
           {/* Student's recorded note for this doc */}
-          <div className="bg-[#FAF3E0] rounded-2xl border border-amber-800/25 p-3.5">
+          <div className="bg-[#F4F4F1] rounded-2xl border border-amber-800/25 p-3.5">
             <span className="text-xs font-bold text-amber-950 block mb-1">
-              ✍️ 내가 적은 메모 ({DOC_METAS[activeTab].label})
+              내가 적은 메모 ({DOC_METAS[activeTab].label})
             </span>
             <p className="text-xs text-stone-800 leading-relaxed whitespace-pre-wrap">
               {notes[activeTab]?.trim() ? notes[activeTab] : '아직 작성한 메모가 없습니다.'}
@@ -98,7 +98,7 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
       </div>
 
       {/* Bottom Close Button */}
-      <div className="bg-[#FAF3E0] border-t border-amber-800/20 p-3 shrink-0">
+      <div className="bg-[#F4F4F1] border-t border-amber-800/20 p-3 shrink-0">
         <div className="max-w-md mx-auto">
           <button
             type="button"

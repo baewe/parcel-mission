@@ -40,11 +40,11 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F5EFE6] text-stone-800 flex justify-center">
-      <div className="w-full max-w-md bg-[#FBF8F1] min-h-screen p-4 pb-12 flex flex-col border-x border-amber-900/10 shadow-xl">
+    <div className="min-h-screen bg-[#F3F3F0] text-stone-800 flex justify-center">
+      <div className="w-full max-w-md bg-[#FAFAF8] min-h-screen p-4 pb-12 flex flex-col border-x border-amber-900/10 shadow-xl">
         {/* Express Title Header */}
         <div className="text-center mt-2 mb-4">
-          <div className="inline-flex items-center gap-1.5 bg-[#451A03] text-amber-300 text-xs font-bold px-3 py-1 rounded-full tracking-wider mb-2 shadow-sm">
+          <div className="inline-flex items-center gap-1.5 bg-[#16181D] text-amber-300 text-xs font-bold px-3 py-1 rounded-full tracking-wider mb-2 shadow-sm">
             <Package className="w-3.5 h-3.5 text-amber-400" />
             <span>AFRI-EXPRESS 직소 탐구</span>
           </div>
@@ -57,7 +57,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
         </div>
 
         {/* Secret Caution Banner */}
-        <div className="bg-amber-50 border-2 border-dashed border-amber-600/60 rounded-xl p-3 mb-5 shadow-sm">
+        <div className="bg-amber-50 border border-solid border-amber-600/60 rounded-xl p-3 mb-5 shadow-sm">
           <div className="flex items-start gap-2.5">
             <ShieldAlert className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
             <div className="text-xs text-amber-950 space-y-0.5">
@@ -85,10 +85,10 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
                   key={box.id}
                   type="button"
                   onClick={() => setPickedBox(box.id)}
-                  className="w-full min-h-[64px] text-left p-3.5 rounded-xl border-2 bg-[#FAF6EE] border-amber-800/25 hover:border-amber-700 hover:bg-white active:scale-[0.99] transition-all flex items-center justify-between shadow-sm cursor-pointer"
+                  className="w-full min-h-[64px] text-left p-3.5 rounded-xl border bg-[#F4F4F1] border-amber-800/25 hover:border-amber-700 hover:bg-white active:scale-[0.99] transition-all flex items-center justify-between shadow-sm cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-[#EADDC9] border border-amber-800/30 flex flex-col items-center justify-center font-black text-amber-950 shadow-inner">
+                    <div className="w-12 h-12 rounded-lg bg-[#E6E6E1] border border-amber-800/30 flex flex-col items-center justify-center font-black text-amber-950 shadow-inner">
                       <span className="text-[10px] text-amber-800">택배</span>
                       <span className="text-xl leading-none">{box.id}</span>
                     </div>
@@ -112,7 +112,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
           /* Step B: Select Assigned Document (1~4) */
           <div className="space-y-4 flex-1">
             {/* Chosen Box Pill Summary + Back Button */}
-            <div className="flex items-center justify-between bg-[#EFE5D3] px-3.5 py-2.5 rounded-xl border border-amber-800/25">
+            <div className="flex items-center justify-between bg-[#E6E6E1] px-3.5 py-2.5 rounded-xl border border-amber-800/25">
               <div className="flex items-center gap-2">
                 <span className="bg-amber-800 text-white font-black text-xs px-2 py-0.5 rounded">
                   {DELIVERY_BOXES[pickedBox].codeName}
@@ -149,7 +149,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
                       key={dId}
                       type="button"
                       onClick={() => setPickedDoc(dId)}
-                      className={`w-full min-h-[64px] text-left p-3.5 rounded-xl border-2 transition-all flex items-center justify-between cursor-pointer ${
+                      className={`w-full min-h-[64px] text-left p-3.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${
                         isSelected
                           ? 'bg-amber-800 border-amber-900 text-white shadow-md'
                           : 'bg-white border-amber-800/25 text-stone-800 hover:border-amber-700 hover:bg-amber-50/50'
@@ -160,7 +160,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
                           className={`w-11 h-11 rounded-lg flex items-center justify-center font-bold ${
                             isSelected
                               ? 'bg-amber-700 text-amber-100'
-                              : 'bg-[#F3EBDD] text-amber-900 border border-amber-800/20'
+                              : 'bg-[#F4F4F1] text-amber-900 border border-amber-800/20'
                           }`}
                         >
                           {docIcons[dId]}
@@ -187,7 +187,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
 
             {/* Confirmation Notice: "당신은 ○○ 담당입니다" */}
             {pickedDoc && (
-              <div className="mt-4 bg-[#FAF3E0] border-2 border-amber-800 rounded-2xl p-4 shadow-md space-y-3">
+              <div className="mt-4 bg-[#F4F4F1] border border-amber-800 rounded-2xl p-4 shadow-md space-y-3">
                 <div className="text-center">
                   <span className="text-[11px] font-bold text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full">
                     배정 완료

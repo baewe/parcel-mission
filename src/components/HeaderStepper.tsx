@@ -49,14 +49,14 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-[#F5EFE6] border-b border-amber-900/15 shadow-sm">
+    <header className="sticky top-0 z-30 bg-[#F3F3F0] border-b border-amber-900/15 shadow-sm">
       {/* Top Waybill Strip */}
-      <div className="bg-[#451A03] text-amber-100 px-3.5 py-2 flex items-center justify-between gap-2">
+      <div className="bg-[#16181D] text-amber-100 px-3.5 py-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <span className="bg-amber-500 text-stone-900 font-extrabold text-[11px] px-1.5 py-0.5 rounded tracking-wider shrink-0">
             AFRI-EXPRESS
           </span>
-          <span className="font-courier text-xs font-bold text-amber-200 truncate">
+          <span className="tabular-nums text-xs font-bold text-amber-200 truncate">
             택배 {boxId} · {docMeta.shortLabel}
           </span>
         </div>
@@ -72,7 +72,7 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
       </div>
 
       {/* 6-Stage Progress Stepper (Completed steps turn into ✔) */}
-      <div className="px-2 py-2 bg-gradient-to-b from-[#FAF6F0] to-[#F5EFE6]">
+      <div className="px-2 py-2 bg-white border-b border-stone-200">
         <div className="flex items-center justify-between relative max-w-md mx-auto">
           {/* Connecting Line */}
           <div className="absolute left-5 right-5 top-3 h-0.5 bg-amber-200/90 -z-0">
@@ -103,7 +103,7 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
                       ? 'bg-emerald-600 text-white shadow-sm'
                       : isCurrent
                       ? 'bg-amber-800 text-white ring-3 ring-amber-300 shadow'
-                      : 'bg-[#EADDC9] text-stone-600'
+                      : 'bg-[#E6E6E1] text-stone-600'
                   }`}
                 >
                   {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : idx + 1}

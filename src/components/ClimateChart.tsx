@@ -37,7 +37,7 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
   const activeData = selectedMonth !== null ? data.find((d) => d.month === selectedMonth) : null;
 
   return (
-    <div className="w-full bg-[#FAF7F0] p-3 rounded-xl border border-amber-800/20 shadow-inner">
+    <div className="w-full bg-[#F4F4F1] p-3 rounded-xl border border-amber-800/20 shadow-inner">
       <div className="flex items-center justify-between text-xs mb-2">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1 font-semibold text-rose-700">
@@ -171,7 +171,7 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
         {activeData ? (
           <>
             <span className="font-bold text-amber-900">
-              📌 {activeData.month}월 상세 정보:
+              {activeData.month}월 상세 정보:
             </span>
             <div className="flex items-center gap-3">
               <span className="text-rose-700 font-mono font-bold">
@@ -184,7 +184,7 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
           </>
         ) : (
           <span className="text-stone-500 text-[11px] flex items-center gap-1 mx-auto">
-            💡 월(1~12월) 또는 막대를 터치하면 해당 달의 정확한 수치를 확인할 수 있습니다.
+            월(1~12월) 또는 막대를 터치하면 해당 달의 정확한 수치를 확인할 수 있습니다.
           </span>
         )}
       </div>

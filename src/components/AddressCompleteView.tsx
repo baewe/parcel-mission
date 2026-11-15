@@ -63,7 +63,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
           particleCount: 90,
           spread: 70,
           origin: { y: 0.55 },
-          colors: ['#D97706', '#DC2626', '#059669', '#F59E0B'],
+          colors: ['#FFCC1F', '#14161A', '#1E8E3E', '#D7261E'],
         });
       } catch {
         // ignore if confetti fails
@@ -76,7 +76,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
   return (
     <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-4">
       {/* Revealed City Banner */}
-      <div className="bg-[#FAF3E0] rounded-2xl border-2 border-amber-800/40 p-4 shadow-md text-center relative overflow-hidden">
+      <div className="bg-[#F4F4F1] rounded-2xl border border-amber-800/40 p-4 shadow-md text-center relative overflow-hidden">
         <span className="inline-block text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-400 px-2.5 py-0.5 rounded-full mb-1.5">
           4단계: 주소 문장 완성
         </span>
@@ -98,7 +98,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
         <button
           type="button"
           onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-[#FAF6EE] text-amber-900 hover:bg-amber-100 px-2.5 py-1.5 rounded-lg border border-amber-800/25 shadow-sm cursor-pointer"
+          className="flex items-center gap-1 text-xs font-bold bg-[#F4F4F1] text-amber-900 hover:bg-amber-100 px-2.5 py-1.5 rounded-lg border border-amber-800/25 shadow-sm cursor-pointer"
         >
           <BookOpen className="w-3.5 h-3.5 text-amber-700" />
           <span>단서 보기</span>
@@ -106,7 +106,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* Live Address Sentence Card */}
-      <div className="bg-[#FAF6EE] p-4 rounded-2xl border-2 border-amber-800/25 shadow-inner">
+      <div className="bg-[#F4F4F1] p-4 rounded-2xl border border-amber-800/25 shadow-inner">
         <p className="text-sm font-bold text-stone-800 leading-loose">
           "이 도시는 아프리카{' '}
           <span
@@ -149,7 +149,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* Blank 1: Region */}
-      <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/25 p-3.5 shadow-sm space-y-2">
+      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5 shadow-sm space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-black text-amber-950">칸 1. 아프리카의 어느 지역인가요?</span>
           {selectedRegion && (
@@ -181,7 +181,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
                 key={opt}
                 type="button"
                 onClick={() => onChangeRegion(opt)}
-                className={`min-h-[44px] rounded-xl border-2 text-xs font-bold transition-all cursor-pointer ${
+                className={`min-h-[44px] rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                   correctStyle
                     ? 'bg-emerald-600 border-emerald-700 text-white shadow'
                     : wrongStyle
@@ -203,7 +203,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* Blank 2: Equator Side */}
-      <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/25 p-3.5 shadow-sm space-y-2">
+      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5 shadow-sm space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-black text-amber-950">칸 2. 적도의 어느 쪽에 있나요?</span>
           {selectedEquatorSide && (
@@ -235,7 +235,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
                 key={opt}
                 type="button"
                 onClick={() => onChangeEquatorSide(opt)}
-                className={`min-h-[44px] rounded-xl border-2 text-xs font-bold transition-all cursor-pointer ${
+                className={`min-h-[44px] rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                   correctStyle
                     ? 'bg-emerald-600 border-emerald-700 text-white shadow'
                     : wrongStyle
@@ -257,7 +257,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* Blank 3: Natural Environment */}
-      <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/25 p-3.5 shadow-sm space-y-2">
+      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5 shadow-sm space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-black text-amber-950">칸 3. 어떤 자연환경에 자리 잡고 있나요?</span>
           {selectedEnvironment && (
@@ -289,7 +289,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
                 key={opt}
                 type="button"
                 onClick={() => onChangeEnvironment(opt)}
-                className={`w-full min-h-[44px] px-3 py-2 rounded-xl border-2 text-xs font-bold text-left transition-all flex items-center justify-between cursor-pointer ${
+                className={`w-full min-h-[44px] px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all flex items-center justify-between cursor-pointer ${
                   correctStyle
                     ? 'bg-emerald-600 border-emerald-700 text-white shadow'
                     : wrongStyle
@@ -315,7 +315,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       {/* Delivery Completed Stamp + Decisive Document Selection (Unlocks ONLY when all 3 are correct!) */}
       {isAllThreeCorrect && (
         <div className="space-y-4 pt-2">
-          <div className="relative bg-[#FFFDF8] rounded-2xl border-4 border-[#854D0E] p-5 shadow-xl overflow-hidden">
+          <div className="relative bg-[#FFFFFF] rounded-2xl border-4 border-[#16181D] p-5 shadow-xl overflow-hidden">
             {/* Red Stamp Animation */}
             <div className="flex justify-center mb-3">
               <div className="animate-stamp inline-block border-4 border-red-600 text-red-600 rounded-xl px-4 py-2 font-black text-center shadow-lg bg-white/90 select-none">
@@ -331,7 +331,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
               </div>
             </div>
 
-            <div className="bg-[#FAF4E6] p-4 rounded-xl border border-amber-800/25 text-center">
+            <div className="bg-[#F4F4F1] p-4 rounded-xl border border-amber-800/25 text-center">
               <span className="text-[11px] font-bold text-amber-800 block mb-1">
                 완성된 배송 주소
               </span>
@@ -345,10 +345,10 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
           </div>
 
           {/* Decisive Document Selection (①~④) */}
-          <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/30 p-4 shadow-sm space-y-3">
+          <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 p-4 shadow-sm space-y-3">
             <div>
               <h3 className="text-xs font-black text-amber-950">
-                🔍 이 도시를 찾는 데 가장 결정적이었던 자료는?
+                이 도시를 찾는 데 가장 결정적이었던 자료는?
               </h3>
               <p className="text-[11px] text-stone-600 mt-0.5">
                 ①~④ 중 하나를 고르면 원모둠 지도로 이동할 수 있습니다.
@@ -364,7 +364,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
                     key={dId}
                     type="button"
                     onClick={() => onSelectDecisiveDoc(dId)}
-                    className={`min-h-[46px] p-2.5 rounded-xl border-2 text-xs font-bold transition-all cursor-pointer ${
+                    className={`min-h-[46px] p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-amber-800 border-amber-900 text-white shadow'
                         : 'bg-white border-amber-800/25 text-stone-800 hover:bg-amber-50'

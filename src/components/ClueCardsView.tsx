@@ -67,14 +67,14 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
           </h2>
         </div>
         <div className="text-right shrink-0">
-          <span className="text-xs font-mono font-bold text-amber-900 bg-[#EFE5D3] px-2.5 py-1 rounded-md border border-amber-800/20">
+          <span className="text-xs font-mono font-bold text-amber-900 bg-[#E6E6E1] px-2.5 py-1 rounded-md border border-amber-800/20">
             {completedNotesCount}/4 기록
           </span>
         </div>
       </div>
 
       {/* 4-Media Tab Switcher */}
-      <div className="grid grid-cols-4 gap-1 p-1 bg-[#EADDCA] rounded-xl border border-amber-800/20 mb-3 shadow-inner">
+      <div className="grid grid-cols-4 gap-1 p-1 bg-[#E6E6E1] rounded-xl border border-amber-800/20 mb-3 shadow-inner">
         {docOrder.map((id) => {
           const meta = DOC_METAS[id];
           const isActive = activeDocId === id;
@@ -117,9 +117,9 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
       </div>
 
       {/* Active Clue Card */}
-      <div className="bg-[#FFFDF9] rounded-2xl border-2 border-amber-800/30 shadow-md overflow-hidden">
+      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 shadow-md overflow-hidden">
         {/* Card Header Bar */}
-        <div className="bg-[#FAF3E0] border-b border-amber-800/20 px-3.5 py-2 flex items-center justify-between">
+        <div className="bg-[#F4F4F1] border-b border-amber-800/20 px-3.5 py-2 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-black text-amber-950">
               {activeMeta.label} 단서
@@ -142,7 +142,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
           {/* "매체에서 알게 된 점" Input */}
           <div className="pt-1">
             <label className="block text-xs font-bold text-amber-950 mb-1.5 flex items-center justify-between">
-              <span>✍️ 매체에서 알게 된 점 ({activeMeta.label})</span>
+              <span>매체에서 알게 된 점 ({activeMeta.label})</span>
               {notes[activeDocId] && notes[activeDocId].trim().length > 0 && (
                 <span className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -161,7 +161,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
         </div>
 
         {/* Prev / Next Controls */}
-        <div className="bg-[#FAF3E0] border-t border-amber-800/20 px-3 py-2 flex items-center justify-between">
+        <div className="bg-[#F4F4F1] border-t border-amber-800/20 px-3 py-2 flex items-center justify-between">
           <button
             type="button"
             onClick={handlePrev}

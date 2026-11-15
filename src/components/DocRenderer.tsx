@@ -40,7 +40,7 @@ export const DocRenderer: React.FC<DocRendererProps> = ({ box, docId }) => {
 
       {/* Observation description (hidden when empty) */}
       {doc.observation && doc.observation.trim().length > 0 && (
-        <div className="bg-[#FAF7F0] p-3 rounded-xl border border-amber-800/15 text-xs text-stone-800 leading-relaxed">
+        <div className="bg-[#F4F4F1] p-3 rounded-xl border border-amber-800/15 text-xs text-stone-800 leading-relaxed">
           {doc.observation}
         </div>
       )}
