@@ -1,17 +1,9 @@
 @import "tailwindcss";
 
-/* 강조용 제목 글꼴: 경기천년제목 (경기도, OFL) */
-@font-face {
-  font-family: 'GyeonggiTitle';
-  src: url('/fonts/GyeonggiTitleM.woff') format('woff');
-  font-weight: 400 900;
-  font-display: swap;
-}
-
 /* 색: 아래 다섯 가지 + 흰색만 사용 */
 @theme {
   --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-display: 'GyeonggiTitle', 'Pretendard Variable', sans-serif;
+  --font-display: 'Pretendard Variable', Pretendard, sans-serif;
 
   --color-navy: #274480;
   --color-lav: #9480BD;
@@ -139,9 +131,8 @@
 /* 강조 글씨: 큰 제목, 도장 */
 h1, h2, .animate-stamp, .font-display {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-synthesis: none;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 .shadow-inner { box-shadow: none; }
 
