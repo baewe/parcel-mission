@@ -197,7 +197,7 @@ export default function App() {
     my_doc: progress.isSubmitted,
     self_check:
       progress.isSubmitted &&
-      progress.selfCheck !== null &&
+      progress.selfCheck === 'same' &&
       (progress.currentStep !== 'my_doc' && progress.currentStep !== 'self_check' ||
         progress.hasVisitedPin ||
         progress.pinSolved),

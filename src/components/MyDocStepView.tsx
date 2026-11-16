@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Send,
   Users,
@@ -41,7 +41,38 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   const docMeta = DOC_METAS[docId];
   const modelAnswer = box.docs[docId].model;
   const canSubmit = interpretation.trim().length > 0;
-  const canProceedExpert = isSubmitted && selfCheck !== null && interpretation.trim().length > 0;
+  // '같다'를 골라야만 전문가 모둠으로 이동
+  const canProceedExpert = isSubmitted && selfCheck === 'same' && interpretation.trim().length > 0;
+
+  // '일부'·'다르다'를 고른 순간의 해석. 이 내용에서 고쳐 써야 '같다'를 고를 수 있음
+  const [revisionBase, setRevisionBase] = useState<string | null>(
+    selfCheck === 'partial' || selfCheck === 'different' ? interpretation : null
+  );
+  const [needsRevisionWarning, setNeedsRevisionWarning] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const focusInterpretation = () => {
+    textareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => textareaRef.current?.focus(), 350);
+  };
+
+  const chooseSelfCheck = (rating: 'same' | 'partial' | 'different') => {
+    if (rating === 'same') {
+      if (revisionBase !== null && interpretation.trim() === revisionBase.trim()) {
+        setNeedsRevisionWarning(true);
+        focusInterpretation();
+        return;
+      }
+      setRevisionBase(null);
+      setNeedsRevisionWarning(false);
+      onSelectSelfCheck('same');
+      return;
+    }
+    setRevisionBase(interpretation);
+    setNeedsRevisionWarning(false);
+    onSelectSelfCheck(rating);
+    focusInterpretation();
+  };
 
   return (
     <div className="w-full mx-auto p-4 pb-24 space-y-4">
@@ -91,6 +122,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
           )}
         </label>
         <textarea
+          ref={textareaRef}
           value={interpretation}
           onChange={(e) => onInterpretationChange(e.target.value)}
           placeholder="이 자료에서 알 수 있는 자연·인문 환경 특징을 적어 보세요."
@@ -137,14 +169,14 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
                 자기 점검: 모범 해설과 내 해석을 비교해 보세요
               </h3>
               <p className="text-[11px] text-stone-600 mt-0.5">
-                하나를 고르고 필요하면 위에서 내 해석을 고쳐 쓴 뒤 모둠으로 이동하세요.
+                '같다'를 골라야 전문가 모둠으로 이동할 수 있어요.
               </p>
             </div>
 
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => onSelectSelfCheck('same')}
+                onClick={() => chooseSelfCheck('same')}
                 className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'same'
                     ? 'bg-emerald-600 border-emerald-700 text-navy shadow'
@@ -157,10 +189,10 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
 
               <button
                 type="button"
-                onClick={() => onSelectSelfCheck('partial')}
+                onClick={() => chooseSelfCheck('partial')}
                 className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'partial'
-                    ? 'bg-amber-600 border-amber-700 text-white shadow'
+                    ? 'bg-sun border-navy text-navy'
                     : 'bg-white border-amber-800/20 text-stone-800 hover:bg-amber-50'
                 }`}
               >
@@ -170,7 +202,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
 
               <button
                 type="button"
-                onClick={() => onSelectSelfCheck('different')}
+                onClick={() => chooseSelfCheck('different')}
                 className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'different'
                     ? 'bg-rose-600 border-rose-700 text-white shadow'
@@ -181,6 +213,22 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
                 <span>다르다</span>
               </button>
             </div>
+
+            {needsRevisionWarning ? (
+              <div className="border-l-4 border-rust bg-white px-3 py-2.5 text-xs leading-relaxed text-navy">
+                <b>아직 해석이 그대로예요.</b> 위 칸에서 내 해석을 보완한 뒤 '같다'를 다시 눌러 주세요.
+              </div>
+            ) : selfCheck === 'partial' ? (
+              <div className="border-l-4 border-sun bg-white px-3 py-2.5 text-xs leading-relaxed text-navy">
+                <b>빠진 부분을 채워 볼까요?</b> 모범 해설에는 있지만 내 해석에는 없는 내용을 찾아 보세요.
+                자료에서 <b>무엇을 보았는지</b>와 그것이 <b>어떤 기후·지역을 뜻하는지</b>까지 적은 뒤 '같다'를 골라 주세요.
+              </div>
+            ) : selfCheck === 'different' ? (
+              <div className="border-l-4 border-rust bg-white px-3 py-2.5 text-xs leading-relaxed text-navy">
+                <b>근거부터 다시 찾아볼까요?</b> 모범 해설이 자료의 어느 부분을 보고 판단했는지 확인해 보세요.
+                그 근거를 바탕으로 내 해석을 다시 쓴 뒤 '같다'를 골라 주세요.
+              </div>
+            ) : null}
           </div>
 
           {/* CTA: '전문가 집단 모이기' */}
@@ -198,7 +246,9 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             <span>
               {canProceedExpert
                 ? '전문가 집단 모이기 (단서 4개 모두 보기)'
-                : '자기 점검(✔/△/✘)을 선택하세요'}
+                : selfCheck === 'partial' || selfCheck === 'different'
+                ? '해석을 보완하고 \'같다\'를 고르면 이동할 수 있어요'
+                : '자기 점검에서 \'같다\'를 골라 주세요'}
             </span>
           </button>
         </div>

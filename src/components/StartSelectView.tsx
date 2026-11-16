@@ -52,21 +52,8 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
             아프리카 택배 대작전
           </h1>
           <p className="text-sm text-navy/70 mt-1 font-medium">
-            내 택배와 담당 자료를 고르고 비밀 배송을 시작하세요!
+            내 택배와 담당 자료를 고르고 배송을 시작하세요!
           </p>
-        </div>
-
-        {/* Secret Caution Banner */}
-        <div className="bg-amber-50 border border-solid border-amber-600/60 rounded-xl p-3 mb-5 shadow-sm">
-          <div className="flex items-start gap-2.5">
-            <ShieldAlert className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-            <div className="text-xs text-amber-950 space-y-0.5">
-              <p className="font-bold text-amber-900">1급 기밀: 도시명·나라명 비공개</p>
-              <p className="text-stone-700 leading-relaxed">
-                먼저 내 자료 1가지를 깊이 해석한 뒤, 전문가 모둠과 원모둠 활동을 거쳐 아프리카 배송지를 찾아냅니다.
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Step A: Select Parcel Box (A~E) */}
@@ -79,31 +66,17 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
               <span className="text-[11px] text-navy/60 font-bold">1 / 2</span>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="grid grid-cols-2 gap-3 max-w-md mx-auto w-full">
               {boxes.map((box) => (
                 <button
                   key={box.id}
                   type="button"
                   onClick={() => setPickedBox(box.id)}
-                  className="w-full min-h-[64px] text-left p-3.5 rounded-xl border bg-[#FFFFFF] border-amber-800/25 hover:border-amber-700 hover:bg-white active:scale-[0.99] transition-all flex items-center justify-between shadow-sm cursor-pointer"
+                  className="aspect-[5/4] rounded-2xl border-2 border-navy/20 bg-white hover:border-navy active:scale-[0.98] transition-all flex flex-col items-center justify-center gap-1 cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-[#FFFFFF] border border-amber-800/30 flex flex-col items-center justify-center font-black text-amber-950 shadow-inner">
-                      <span className="text-[10px] text-amber-800">택배</span>
-                      <span className="text-xl leading-none">{box.id}</span>
-                    </div>
-                    <div>
-                      <span className="font-extrabold text-stone-900 text-base block">
-                        {box.codeName}
-                      </span>
-                      <span className="text-xs text-stone-600">
-                        비밀 소포 · 단서 자료 4종 포함
-                      </span>
-                    </div>
-                  </div>
-                  <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
+                  <Package className="w-6 h-6 text-sun" />
+                  <span className="text-xs font-bold text-navy/60">택배</span>
+                  <span className="text-4xl font-extrabold text-navy leading-none">{box.id}</span>
                 </button>
               ))}
             </div>
