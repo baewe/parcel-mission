@@ -91,8 +91,6 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
     }
   }, [isDone, onAddressAllCorrect]);
 
-  const docOrder: DocId[] = ['1', '2', '3', '4'];
-
   const blankClass = (f: Field) => {
     const r = resultOf(f);
     if (!current[f]) return 'bg-white border-navy/40 text-navy/40';
@@ -134,7 +132,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-4">
+    <div className="w-full mx-auto p-4 pb-24 space-y-4">
       {/* 배송지 공개 */}
       <div className="bg-white rounded-2xl p-4 text-center">
         <span className="inline-block text-[11px] font-bold text-navy bg-sun px-2.5 py-0.5 rounded mb-1.5">
@@ -272,44 +270,13 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-4 space-y-3">
-            <div>
-              <h3 className="text-sm font-bold text-navy">이 도시를 찾는 데 가장 결정적이었던 자료는?</h3>
-              <p className="text-xs text-navy/70 mt-0.5">하나를 고르면 원모둠 지도로 이동할 수 있어요.</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {docOrder.map((dId) => {
-                const meta = DOC_METAS[dId];
-                const isSelected = decisiveDocId === dId;
-                return (
-                  <button
-                    key={dId}
-                    type="button"
-                    onClick={() => onSelectDecisiveDoc(dId)}
-                    className={`min-h-[46px] p-2.5 rounded-xl border-2 text-sm font-bold transition-all cursor-pointer ${
-                      isSelected ? 'bg-lav border-navy text-white' : 'bg-white border-navy/30 text-navy'
-                    }`}
-                  >
-                    {meta.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           <button
             type="button"
-            disabled={!decisiveDocId}
             onClick={onGoToHomeGroup}
-            className={`w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
-              decisiveDocId
-                ? 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
-                : 'bg-white/20 text-white/60 cursor-not-allowed'
-            }`}
+            className="w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all bg-sun text-navy active:scale-[0.98] cursor-pointer"
           >
             <Users className="w-4 h-4" />
-            <span>{decisiveDocId ? '원모둠으로 돌아가기' : '결정적 자료를 하나 고르세요'}</span>
+            <span>원모둠으로 돌아가기</span>
           </button>
         </div>
       )}

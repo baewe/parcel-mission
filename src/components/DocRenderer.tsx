@@ -26,7 +26,7 @@ export const DocRenderer: React.FC<DocRendererProps> = ({ box, docId }) => {
             alt={`${meta.label} 단서`}
             referrerPolicy="no-referrer"
             onError={() => setImgErr(true)}
-            className="w-full h-auto object-contain block"
+            className="w-full h-auto max-h-[60vh] object-contain block mx-auto"
           />
         </div>
       ) : (

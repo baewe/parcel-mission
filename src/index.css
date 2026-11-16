@@ -128,6 +128,14 @@
   }
 }
 
+/* 아이패드·노트북에서는 전체 글씨와 간격을 조금 키움 */
+@media (min-width: 768px) {
+  html { font-size: 112.5%; }
+}
+@media (min-width: 1280px) {
+  html { font-size: 118.75%; }
+}
+
 /* 강조 글씨: 큰 제목, 도장 */
 h1, h2, .animate-stamp, .font-display {
   font-family: var(--font-display);

@@ -10,6 +10,9 @@
  * 지도 번호는 위치 순서(북쪽 → 남쪽)로 매김
  */
 
+// 교과서 주소 (완성되면 여기에 링크를 넣으면 상단바 '교과서' 버튼이 바로 열림)
+export const TEXTBOOK_URL = '';
+
 export type BoxId = 'A' | 'B' | 'C' | 'D' | 'E';
 export type DocId = '1' | '2' | '3' | '4';
 

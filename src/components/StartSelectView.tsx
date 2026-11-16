@@ -41,15 +41,15 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
 
   return (
     <div className="min-h-screen bg-[#274480] text-stone-800 flex justify-center">
-      <div className="w-full max-w-md bg-[#274480] min-h-screen p-4 pb-12 flex flex-col border-x border-amber-900/10 shadow-xl">
+      <div className="w-full max-w-md md:max-w-2xl bg-navy min-h-screen p-4 md:p-8 pb-12 flex flex-col">
         {/* Express Title Header */}
         <div className="text-center mt-2 mb-4">
           <div className="inline-flex items-center gap-1.5 bg-[#274480] text-amber-300 text-xs font-bold px-3 py-1 rounded-full tracking-wider mb-2 shadow-sm">
             <Package className="w-3.5 h-3.5 text-amber-400" />
-            <span>AFRI-EXPRESS 직소 탐구</span>
+            <span>중1 사회 · 아프리카 직소 탐구</span>
           </div>
           <h1 className="text-3xl text-white tracking-tight">
-            AFRI-익스프레스 택배 대작전
+            아프리카 택배 대작전
           </h1>
           <p className="text-sm text-white/80 mt-1 font-medium">
             내 택배와 담당 자료를 고르고 비밀 배송을 시작하세요!

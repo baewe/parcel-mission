@@ -45,7 +45,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   const canProceedExpert = isSubmitted && selfCheck !== null && interpretation.trim().length > 0;
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-4">
+    <div className="w-full mx-auto p-4 pb-24 space-y-4">
       {/* Assigned Role Banner: "당신은 ○○ 담당입니다" */}
       <div className="bg-[#274480] text-amber-50 rounded-2xl p-3.5 shadow-md flex items-center justify-between border border-amber-700">
         <div>

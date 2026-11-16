@@ -205,8 +205,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] text-stone-900 flex justify-center selection:bg-amber-700 selection:text-white">
-      <div className="w-full max-w-md bg-[#274480] min-h-screen flex flex-col shadow-2xl relative border-x border-amber-900/10">
+    <div className="min-h-screen bg-navy text-navy flex justify-center selection:bg-sun selection:text-navy">
+      <div className="w-full max-w-md md:max-w-2xl lg:max-w-3xl bg-navy min-h-screen flex flex-col relative">
         <HeaderStepper
           currentStep={progress.currentStep}
           boxId={selectedBoxId}

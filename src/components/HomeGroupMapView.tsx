@@ -8,7 +8,7 @@ import {
   RotateCcw,
   Users,
 } from 'lucide-react';
-import { BoxId, DELIVERY_BOXES, DeliveryBox, DocId } from '../data';
+import { BoxId, DELIVERY_BOXES, DeliveryBox, DocId, DOC_METAS } from '../data';
 import { FullScreenClueModal } from './FullScreenClueModal';
 
 interface HomeGroupMapViewProps {
@@ -173,7 +173,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   }, [guesses, myBox.id]);
 
   return (
-    <div className="w-full max-w-md mx-auto p-3 pb-24 space-y-3.5">
+    <div className="w-full mx-auto p-3 pb-24 space-y-3.5">
       {/* Header */}
       <div className="flex items-center justify-between gap-2">
         <div>
@@ -186,23 +186,40 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
           </h2>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-white text-navy px-2.5 py-2 rounded-lg border border-white shrink-0 cursor-pointer"
-        >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>내 택배 요약</span>
-        </button>
       </div>
 
-      {/* 내 택배 */}
-      <div className="bg-white rounded-xl px-3 py-2 text-xs font-bold text-navy">
-        내 택배({myBox.id}): 지도 {myBox.pinCircle}번 · {myBox.cityName}({myBox.countryName})
+      {/* 내 택배 + 내가 적은 단서 노트 (친구들에게 설명할 때 보는 곳) */}
+      <div className="bg-white rounded-2xl p-4 space-y-3 border-4 border-sun">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="font-display text-lg text-navy leading-tight">내가 적은 단서 노트</p>
+            <p className="text-xs text-navy/70 mt-0.5">
+              내 택배({myBox.id}): 지도 {myBox.pinCircle}번 · {myBox.cityName}({myBox.countryName})
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsClueModalOpen(true)}
+            className="flex items-center gap-1 text-xs font-bold bg-navy text-white px-2.5 py-1.5 rounded-lg shrink-0 cursor-pointer"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>자료 사진 보기</span>
+          </button>
+        </div>
+        <ul className="space-y-2">
+          {(['1', '2', '3', '4'] as DocId[]).map((dId) => (
+            <li key={dId} className="text-sm text-navy leading-relaxed">
+              <span className="inline-block font-bold text-xs bg-sun text-navy px-1.5 py-0.5 rounded mr-1.5">
+                {DOC_METAS[dId].label}
+              </span>
+              {notes[dId]?.trim() ? notes[dId] : <span className="text-navy/40">(적은 내용 없음)</span>}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Map */}
-      <div className="relative isolate z-0 w-full h-[38vh] min-h-[250px] max-h-[340px] rounded-2xl overflow-hidden border border-white/40">
+      <div className="relative isolate z-0 w-full h-[38vh] md:h-[52vh] min-h-[250px] max-h-[340px] md:max-h-[560px] rounded-2xl overflow-hidden border border-white/40">
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 

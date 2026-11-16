@@ -216,7 +216,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-3 pb-24 flex flex-col">
+    <div className="w-full mx-auto p-3 pb-24 flex flex-col">
       {/* Header */}
       <div className="mb-2.5 flex items-center justify-between gap-2">
         <div>
@@ -245,7 +245,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
       </div>
 
       {/* Leaflet Satellite Map (Label-free) */}
-      <div className="relative isolate z-0 w-full h-[46vh] min-h-[310px] max-h-[420px] rounded-2xl overflow-hidden border border-amber-900/40">
+      <div className="relative isolate z-0 w-full h-[46vh] md:h-[58vh] min-h-[310px] max-h-[420px] md:max-h-[640px] rounded-2xl overflow-hidden border border-amber-900/40">
         <div ref={mapContainerRef} className="w-full h-full" />
         <button
           type="button"

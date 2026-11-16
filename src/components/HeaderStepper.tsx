@@ -1,6 +1,6 @@
-import React from 'react';
-import { Check, RefreshCw } from 'lucide-react';
-import { BoxId, DocId, DOC_METAS } from '../data';
+import React, { useState } from 'react';
+import { BookOpen, Check, RefreshCw, X } from 'lucide-react';
+import { BoxId, DocId, DOC_METAS, TEXTBOOK_URL } from '../data';
 
 export type StepType =
   | 'my_doc'
@@ -37,6 +37,12 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
   onResetSelection,
 }) => {
   const docMeta = DOC_METAS[docId];
+  const [isTextbookOpen, setIsTextbookOpen] = useState(false);
+
+  const openTextbook = () => {
+    if (TEXTBOOK_URL) window.open(TEXTBOOK_URL, '_blank', 'noopener');
+    else setIsTextbookOpen(true);
+  };
   const currentIdx = STEP_LIST.findIndex((s) => s.key === currentStep);
 
   // Allow clicking any completed step or the step immediately following the last completed step
@@ -53,17 +59,23 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
       {/* Top Waybill Strip */}
       <div className="bg-[#274480] text-amber-100 px-3.5 py-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="bg-amber-500 text-stone-900 font-extrabold text-[11px] px-1.5 py-0.5 rounded tracking-wider shrink-0">
-            AFRI-EXPRESS
-          </span>
-          <span className="tabular-nums text-xs font-bold text-amber-200 truncate">
+          <span className="text-sm font-bold text-white truncate">
             택배 {boxId} · {docMeta.shortLabel}
           </span>
         </div>
         <button
           type="button"
+          onClick={openTextbook}
+          className="flex items-center gap-1.5 text-xs font-bold text-navy bg-sun px-3 py-1.5 rounded shrink-0 cursor-pointer ml-auto"
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>자료(교과서)</span>
+          {!TEXTBOOK_URL && <span className="font-medium">· 제작 중</span>}
+        </button>
+        <button
+          type="button"
           onClick={onResetSelection}
-          className="flex items-center gap-1 text-[11px] text-amber-200 hover:text-white transition-colors bg-amber-950/70 px-2.5 py-1 rounded border border-amber-700/50 shrink-0 cursor-pointer"
+          className="flex items-center gap-1 text-xs text-white px-2.5 py-1.5 rounded border border-white/50 shrink-0 cursor-pointer"
           title="택배·자료 다시 고르기"
         >
           <RefreshCw className="w-3 h-3" />
@@ -73,7 +85,7 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
 
       {/* 6-Stage Progress Stepper (Completed steps turn into ✔) */}
       <div className="px-2 py-2 bg-white border-b border-stone-200">
-        <div className="flex items-center justify-between relative max-w-md mx-auto">
+        <div className="flex items-center justify-between relative max-w-md md:max-w-2xl mx-auto">
           {/* Connecting Line */}
           <div className="absolute left-5 right-5 top-3 h-0.5 bg-amber-200/90 -z-0">
             <div
@@ -124,6 +136,28 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
           })}
         </div>
       </div>
+      {isTextbookOpen && (
+        <div
+          className="fixed inset-0 z-[2000] bg-navy/80 flex items-center justify-center p-4"
+          onClick={() => setIsTextbookOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-5 w-full max-w-sm text-center space-y-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <BookOpen className="w-8 h-8 mx-auto text-navy" />
+            <p className="font-display text-xl text-navy">교과서는 지금 만드는 중이에요</p>
+            <p className="text-sm text-navy/70">완성되면 이 버튼을 눌러 바로 볼 수 있어요.</p>
+            <button
+              type="button"
+              onClick={() => setIsTextbookOpen(false)}
+              className="w-full min-h-[44px] rounded-xl bg-sun text-navy font-bold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <X className="w-4 h-4" /> 닫기
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
