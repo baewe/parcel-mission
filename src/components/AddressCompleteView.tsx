@@ -134,7 +134,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
   return (
     <div className="w-full mx-auto p-4 pb-24 space-y-4">
       {/* 배송지 공개 */}
-      <div className="bg-white rounded-2xl p-4 text-center">
+      <div className="bg-white border border-navy/15 rounded-2xl p-4 text-center">
         <span className="inline-block text-[11px] font-bold text-navy bg-sun px-2.5 py-0.5 rounded mb-1.5">
           4단계: 주소 문장 완성
         </span>
@@ -144,7 +144,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       <div className="flex items-center justify-between px-1">
-        <span className="text-sm font-bold text-white flex items-center gap-1.5">
+        <span className="text-sm font-bold text-navy flex items-center gap-1.5">
           <FileText className="w-4 h-4" />
           <span>세 빈칸을 채워 주소를 완성하세요</span>
         </span>
@@ -159,7 +159,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* 주소 문장 */}
-      <div className="bg-white p-4 rounded-2xl">
+      <div className="bg-white border border-navy/15 p-4 rounded-2xl">
         <p className="text-sm font-bold text-navy leading-loose">
           "이 도시는 아프리카{' '}
           <span className={`inline-block px-2 py-0.5 rounded border ${blankClass('region')}`}>
@@ -178,7 +178,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* 칸 1 */}
-      <div className="bg-white rounded-2xl p-3.5 space-y-2">
+      <div className="bg-white border border-navy/15 rounded-2xl p-3.5 space-y-2">
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-bold text-navy">칸 1. 아프리카의 어느 지역인가요?</span>
           <ResultTag f="region" />
@@ -198,7 +198,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* 칸 2 */}
-      <div className="bg-white rounded-2xl p-3.5 space-y-2">
+      <div className="bg-white border border-navy/15 rounded-2xl p-3.5 space-y-2">
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-bold text-navy">칸 2. 적도의 어느 쪽에 있나요?</span>
           <ResultTag f="equatorSide" />
@@ -218,7 +218,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       </div>
 
       {/* 칸 3 */}
-      <div className="bg-white rounded-2xl p-3.5 space-y-2">
+      <div className="bg-white border border-navy/15 rounded-2xl p-3.5 space-y-2">
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-bold text-navy">칸 3. 어떤 자연환경에 자리 잡고 있나요?</span>
           <ResultTag f="environment" />
@@ -244,7 +244,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
           disabled={!allFilled}
           onClick={() => setChecked({ ...current })}
           className={`w-full min-h-[52px] rounded-xl font-bold text-sm transition-all ${
-            allFilled ? 'bg-sun text-navy cursor-pointer active:scale-[0.98]' : 'bg-white/20 text-white/60 cursor-not-allowed'
+            allFilled ? 'bg-sun text-navy cursor-pointer active:scale-[0.98]' : 'bg-white border border-navy/20 text-navy/40 cursor-not-allowed'
           }`}
         >
           {allFilled ? '정답 확인하기' : '세 칸을 모두 고른 뒤 정답을 확인하세요'}
@@ -254,7 +254,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
       {/* 배송 완료 */}
       {isDone && (
         <div className="space-y-4 pt-2">
-          <div className="bg-white rounded-2xl p-5">
+          <div className="bg-white border border-navy/15 rounded-2xl p-5">
             <div className="flex justify-center mb-3">
               <div className="animate-stamp inline-block border-4 border-rust text-rust rounded-lg px-5 py-2 text-center select-none">
                 <div className="text-3xl leading-none">배송 완료</div>

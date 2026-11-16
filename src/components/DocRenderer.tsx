@@ -45,12 +45,6 @@ export const DocRenderer: React.FC<DocRendererProps> = ({ box, docId }) => {
         </div>
       )}
 
-      {/* Credit (small gray text below, hidden when empty) */}
-      {doc.credit && doc.credit.trim().length > 0 && (
-        <p className="text-[11px] text-stone-500 leading-snug px-0.5">
-          {doc.credit}
-        </p>
-      )}
     </div>
   );
 };

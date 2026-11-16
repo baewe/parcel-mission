@@ -62,7 +62,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
             <Users className="w-3 h-3" />
             <span>전문가 집단 모이기</span>
           </span>
-          <h2 className="text-xl text-white mt-1">
+          <h2 className="text-xl text-navy mt-1">
             단서 4개를 모두 종합하세요
           </h2>
         </div>

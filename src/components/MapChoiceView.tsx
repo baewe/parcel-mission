@@ -223,7 +223,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
           <span className="text-[11px] font-bold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded border border-amber-300">
             3단계: 배송지 고르기
           </span>
-          <h2 className="text-lg text-white mt-0.5">
+          <h2 className="text-lg text-navy mt-0.5">
             1~5 중 배송지 위치를 고르세요
           </h2>
         </div>
@@ -356,7 +356,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
           <button
             type="button"
             onClick={onBackToClues}
-            className="text-xs text-white/80 underline underline-offset-2 cursor-pointer"
+            className="text-xs text-navy/70 underline underline-offset-2 cursor-pointer"
           >
             ← 단서 4개 화면으로 돌아가기
           </button>

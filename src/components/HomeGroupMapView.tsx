@@ -15,6 +15,8 @@ interface HomeGroupMapViewProps {
   myBox: DeliveryBox;
   notes: Record<DocId, string>;
   guesses: Partial<Record<BoxId, number>>;
+  friendNotes: Partial<Record<BoxId, string>>;
+  onFriendNoteChange: (boxId: BoxId, value: string) => void;
   onGuessBox: (targetBoxId: BoxId, pickedPin: number) => void;
   onAllGuessed: () => void;
   onResetAll: () => void;
@@ -27,6 +29,8 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   myBox,
   notes,
   guesses,
+  friendNotes,
+  onFriendNoteChange,
   onGuessBox,
   onAllGuessed,
   onResetAll,
@@ -43,12 +47,14 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   const otherBoxes = ALL_BOXES.filter((b) => b.id !== myBox.id);
   const isSolved = (b: DeliveryBox) => guesses[b.id] === b.pinNumber;
   const isAllFinished = otherBoxes.every(isSolved);
-  const hasPending = otherBoxes.some((b) => !isSolved(b) && pending[b.id] !== undefined);
+  const hasMemo = (b: DeliveryBox) => (friendNotes[b.id] || '').trim().length > 0;
+  // 설명 메모를 적고 번호를 고른 택배만 정답 확인 가능
+  const hasPending = otherBoxes.some((b) => !isSolved(b) && hasMemo(b) && pending[b.id] !== undefined);
 
   const handleCheckAll = () => {
     otherBoxes.forEach((b) => {
       const pick = pending[b.id];
-      if (!isSolved(b) && pick !== undefined) onGuessBox(b.id, pick);
+      if (!isSolved(b) && hasMemo(b) && pick !== undefined) onGuessBox(b.id, pick);
     });
     setPending({});
   };
@@ -181,7 +187,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
             <Users className="w-3 h-3" />
             <span>5단계: 원모둠 지도</span>
           </span>
-          <h2 className="text-lg text-white mt-1">
+          <h2 className="text-lg text-navy mt-1">
             친구 설명을 듣고 나머지 택배를 찾으세요
           </h2>
         </div>
@@ -219,7 +225,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
       </div>
 
       {/* Map */}
-      <div className="relative isolate z-0 w-full h-[38vh] md:h-[52vh] min-h-[250px] max-h-[340px] md:max-h-[560px] rounded-2xl overflow-hidden border border-white/40">
+      <div className="relative isolate z-0 w-full h-[38vh] md:h-[52vh] min-h-[250px] max-h-[340px] md:max-h-[560px] rounded-2xl overflow-hidden border border-navy/20">
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 
@@ -242,7 +248,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
             <div
               key={targetBox.id}
               className={`rounded-2xl border-2 p-3.5 bg-white ${
-                solved ? 'border-leaf' : wasWrong && current === undefined ? 'border-rust' : 'border-white'
+                solved ? 'border-leaf' : wasWrong && current === undefined ? 'border-rust' : 'border-navy/15'
               }`}
             >
               <div className="flex items-center justify-between mb-2 gap-2">
@@ -255,7 +261,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
                       {targetBox.cityName} ({targetBox.countryName})
                     </span>
                   ) : (
-                    <span className="text-xs text-navy/70">친구의 설명을 듣고 번호 선택</span>
+                    <span className="text-xs text-navy/70">친구 설명을 적고 번호 선택</span>
                   )}
                 </div>
 
@@ -271,12 +277,24 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
                 )}
               </div>
 
+              <textarea
+                value={friendNotes[targetBox.id] || ''}
+                onChange={(e) => onFriendNoteChange(targetBox.id, e.target.value)}
+                readOnly={solved}
+                rows={2}
+                placeholder="친구가 말한 주소를 간단히 적어 보세요. (지역, 적도의 어느 쪽, 자연환경)"
+                className="w-full text-sm p-2.5 mb-2 rounded-lg border border-navy/25 bg-white text-navy placeholder:text-navy/40 focus:outline-none focus:border-navy resize-none"
+              />
+
               <div className="grid grid-cols-5 gap-1.5">
                 {PIN_ORDER.map((pinBox) => {
+                  const locked = !solved && !hasMemo(targetBox);
                   const isThisPicked = current === pinBox.pinNumber;
                   let btnStyle = 'bg-white border-navy/30 text-navy';
                   if (solved) {
                     btnStyle = isThisPicked ? 'bg-leaf border-navy text-navy' : 'bg-white border-navy/10 text-navy/30';
+                  } else if (locked) {
+                    btnStyle = 'bg-white border-navy/10 text-navy/25';
                   } else if (isThisPicked) {
                     btnStyle = 'bg-lav border-navy text-white';
                   }
@@ -285,12 +303,12 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
                     <button
                       key={pinBox.pinNumber}
                       type="button"
-                      disabled={solved}
+                      disabled={solved || locked}
                       onClick={() =>
                         setPending((prev) => ({ ...prev, [targetBox.id]: pinBox.pinNumber }))
                       }
                       className={`min-h-[48px] rounded-xl border-2 text-lg font-extrabold transition-all ${
-                        solved ? 'cursor-default' : 'cursor-pointer active:scale-95'
+                        solved || locked ? 'cursor-default' : 'cursor-pointer active:scale-95'
                       } ${btnStyle}`}
                     >
                       {pinBox.pinCircle}
@@ -309,10 +327,10 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
           disabled={!hasPending}
           onClick={handleCheckAll}
           className={`w-full min-h-[52px] rounded-xl font-bold text-sm transition-all ${
-            hasPending ? 'bg-sun text-navy cursor-pointer active:scale-[0.98]' : 'bg-white/20 text-white/60 cursor-not-allowed'
+            hasPending ? 'bg-sun text-navy cursor-pointer active:scale-[0.98]' : 'bg-white border border-navy/20 text-navy/40 cursor-not-allowed'
           }`}
         >
-          {hasPending ? '정답 확인하기' : '번호를 고른 뒤 정답을 확인하세요'}
+          {hasPending ? '정답 확인하기' : '설명을 적고 번호를 고른 뒤 정답을 확인하세요'}
         </button>
       )}
 
@@ -321,7 +339,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         <button
           type="button"
           onClick={onResetAll}
-          className="w-full min-h-[46px] py-2.5 px-4 rounded-xl bg-transparent text-white font-bold text-xs flex items-center justify-center gap-2 border border-white/60 cursor-pointer"
+          className="w-full min-h-[46px] py-2.5 px-4 rounded-xl bg-white text-navy font-bold text-xs flex items-center justify-center gap-2 border border-navy/30 cursor-pointer"
         >
           <RotateCcw className="w-4 h-4" />
           <span>새로운 택배·자료로 처음부터 다시하기</span>

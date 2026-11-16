@@ -40,18 +40,18 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#274480] text-stone-800 flex justify-center">
-      <div className="w-full max-w-md md:max-w-2xl bg-navy min-h-screen p-4 md:p-8 pb-12 flex flex-col">
+    <div className="min-h-screen bg-white text-navy flex justify-center">
+      <div className="w-full max-w-md md:max-w-2xl bg-white min-h-screen p-4 md:p-8 pb-12 flex flex-col">
         {/* Express Title Header */}
         <div className="text-center mt-2 mb-4">
           <div className="inline-flex items-center gap-1.5 bg-[#274480] text-amber-300 text-xs font-bold px-3 py-1 rounded-full tracking-wider mb-2 shadow-sm">
             <Package className="w-3.5 h-3.5 text-amber-400" />
             <span>중1 사회 · 아프리카 직소 탐구</span>
           </div>
-          <h1 className="text-3xl text-white tracking-tight">
+          <h1 className="text-3xl text-navy tracking-tight">
             아프리카 택배 대작전
           </h1>
-          <p className="text-sm text-white/80 mt-1 font-medium">
+          <p className="text-sm text-navy/70 mt-1 font-medium">
             내 택배와 담당 자료를 고르고 비밀 배송을 시작하세요!
           </p>
         </div>
@@ -73,10 +73,10 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
         {!pickedBox ? (
           <div className="space-y-3 flex-1">
             <div className="flex items-center justify-between px-1">
-              <h2 className="text-base text-white">
+              <h2 className="text-base text-navy">
                 1. 내가 맡은 택배를 고르세요 (A~E)
               </h2>
-              <span className="text-[11px] text-white/70 font-bold">1 / 2</span>
+              <span className="text-[11px] text-navy/60 font-bold">1 / 2</span>
             </div>
 
             <div className="space-y-2.5">
@@ -134,10 +134,10 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
 
             <div>
               <div className="flex items-center justify-between px-1 mb-2.5">
-                <h2 className="text-base text-white">
+                <h2 className="text-base text-navy">
                   2. 내가 맡은 자료 1개를 고르세요
                 </h2>
-                <span className="text-[11px] text-white/70 font-bold">2 / 2</span>
+                <span className="text-[11px] text-navy/60 font-bold">2 / 2</span>
               </div>
 
               <div className="grid grid-cols-1 gap-2.5">
@@ -213,9 +213,6 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
           </div>
         )}
 
-        <div className="mt-6 pt-3 border-t border-white/20 text-center text-[11px] text-white/60">
-          URL 바로가기 예시: <span className="font-mono">?box=A&doc=1</span>
-        </div>
       </div>
     </div>
   );

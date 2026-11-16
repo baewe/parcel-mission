@@ -40,7 +40,6 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
 }) => {
   const docMeta = DOC_METAS[docId];
   const modelAnswer = box.docs[docId].model;
-  const tipText = box.docs[docId].tip;
   const canSubmit = interpretation.trim().length > 0;
   const canProceedExpert = isSubmitted && selfCheck !== null && interpretation.trim().length > 0;
 
@@ -66,7 +65,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
         <span className="text-[11px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
           {stage === 'my_doc' ? '1단계: 내 자료 해석' : '2단계: 모범 해설 · 자기 점검'}
         </span>
-        <h2 className="text-xl text-white mt-1">
+        <h2 className="text-xl text-navy mt-1">
           {stage === 'my_doc'
             ? `${docMeta.label} 자료만 보고 해석을 적으세요`
             : '모범 해설과 비교하고 내 해석을 점검하세요'}
@@ -129,12 +128,6 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             <p className="text-xs text-stone-800 leading-relaxed bg-white/80 p-3 rounded-xl border border-amber-800/15">
               {modelAnswer}
             </p>
-            {tipText && (
-              <p className="text-xs leading-relaxed px-3 py-2 rounded-lg bg-sun text-navy">
-                <span className="font-display text-sm mr-1.5">배송지 찾기 팁</span>
-                {tipText}
-              </p>
-            )}
           </div>
 
           {/* Self-check 3-choice buttons */}

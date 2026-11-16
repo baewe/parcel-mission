@@ -27,6 +27,7 @@ interface SessionProgress {
   addressCompleted: boolean;
   decisiveDocId: DocId | null;
   homeGroupGuesses: Partial<Record<BoxId, number>>;
+  friendNotes: Partial<Record<BoxId, string>>; // 원모둠에서 친구 설명을 듣고 적은 메모
   homeGroupCompleted: boolean;
 }
 
@@ -44,6 +45,7 @@ const DEFAULT_PROGRESS: SessionProgress = {
   addressCompleted: false,
   decisiveDocId: null,
   homeGroupGuesses: {},
+  friendNotes: {},
   homeGroupCompleted: false,
 };
 
@@ -59,6 +61,7 @@ function loadSession(boxId: BoxId, docId: DocId): SessionProgress {
       ...parsed,
       notes: { ...DEFAULT_PROGRESS.notes, ...(parsed.notes || {}) },
       homeGroupGuesses: { ...(parsed.homeGroupGuesses || {}) },
+      friendNotes: { ...(parsed.friendNotes || {}) },
     };
   } catch {
     return { ...DEFAULT_PROGRESS, notes: { ...DEFAULT_PROGRESS.notes } };
@@ -205,8 +208,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-navy text-navy flex justify-center selection:bg-sun selection:text-navy">
-      <div className="w-full max-w-md md:max-w-2xl lg:max-w-3xl bg-navy min-h-screen flex flex-col relative">
+    <div className="min-h-screen bg-white text-navy flex justify-center selection:bg-sun selection:text-navy">
+      <div className="w-full max-w-md md:max-w-2xl lg:max-w-3xl bg-white min-h-screen flex flex-col relative">
         <HeaderStepper
           currentStep={progress.currentStep}
           boxId={selectedBoxId}
@@ -331,6 +334,13 @@ export default function App() {
               myBox={activeBox}
               notes={progress.notes}
               guesses={progress.homeGroupGuesses}
+              friendNotes={progress.friendNotes}
+              onFriendNoteChange={(targetBoxId, val) =>
+                setProgress((prev) => ({
+                  ...prev,
+                  friendNotes: { ...prev.friendNotes, [targetBoxId]: val },
+                }))
+              }
               onGuessBox={(targetBoxId, pickedPin) =>
                 setProgress((prev) => ({
                   ...prev,

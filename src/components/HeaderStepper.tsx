@@ -72,15 +72,6 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
           <span>자료(교과서)</span>
           {!TEXTBOOK_URL && <span className="font-medium">· 제작 중</span>}
         </button>
-        <button
-          type="button"
-          onClick={onResetSelection}
-          className="flex items-center gap-1 text-xs text-white px-2.5 py-1.5 rounded border border-white/50 shrink-0 cursor-pointer"
-          title="택배·자료 다시 고르기"
-        >
-          <RefreshCw className="w-3 h-3" />
-          <span>변경</span>
-        </button>
       </div>
 
       {/* 6-Stage Progress Stepper (Completed steps turn into ✔) */}
