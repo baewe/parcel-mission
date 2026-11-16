@@ -30,13 +30,13 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[2000] bg-[#FAFAF8] flex flex-col"
+      className="fixed inset-0 z-[2000] bg-[#274480] flex flex-col"
       role="dialog"
       aria-modal="true"
       aria-label="단서 다시보기 전체 화면"
     >
       {/* Top Bar */}
-      <div className="bg-[#16181D] text-amber-50 px-4 py-3 flex items-center justify-between shrink-0 shadow-md">
+      <div className="bg-[#274480] text-amber-50 px-4 py-3 flex items-center justify-between shrink-0 shadow-md">
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-amber-300" />
           <h3 className="font-black text-sm">
@@ -54,8 +54,8 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
       </div>
 
       {/* Sub-navigation Tabs */}
-      <div className="bg-[#F4F4F1] border-b border-amber-800/20 px-3 py-2 shrink-0">
-        <div className="max-w-md mx-auto grid grid-cols-4 gap-1 p-1 bg-[#E6E6E1] rounded-xl">
+      <div className="bg-[#FFFFFF] border-b border-amber-800/20 px-3 py-2 shrink-0">
+        <div className="max-w-md mx-auto grid grid-cols-4 gap-1 p-1 bg-[#FFFFFF] rounded-xl">
           {docOrder.map((id) => {
             const meta = DOC_METAS[id];
             const isActive = activeTab === id;
@@ -86,7 +86,7 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
           </div>
 
           {/* Student's recorded note for this doc */}
-          <div className="bg-[#F4F4F1] rounded-2xl border border-amber-800/25 p-3.5">
+          <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5">
             <span className="text-xs font-bold text-amber-950 block mb-1">
               내가 적은 메모 ({DOC_METAS[activeTab].label})
             </span>
@@ -98,12 +98,12 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
       </div>
 
       {/* Bottom Close Button */}
-      <div className="bg-[#F4F4F1] border-t border-amber-800/20 p-3 shrink-0">
+      <div className="bg-[#FFFFFF] border-t border-amber-800/20 p-3 shrink-0">
         <div className="max-w-md mx-auto">
           <button
             type="button"
             onClick={onClose}
-            className="w-full min-h-[48px] py-3 rounded-xl bg-amber-800 hover:bg-amber-900 text-white font-bold text-sm cursor-pointer"
+            className="w-full min-h-[48px] py-3 rounded-xl bg-sun text-navy font-bold text-sm cursor-pointer"
           >
             단서 보기 닫고 지도로 돌아가기
           </button>

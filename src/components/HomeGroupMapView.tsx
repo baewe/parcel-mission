@@ -4,7 +4,6 @@ import confetti from 'canvas-confetti';
 import {
   Check,
   X,
-  Trophy,
   BookOpen,
   RotateCcw,
   Users,
@@ -21,7 +20,8 @@ interface HomeGroupMapViewProps {
   onResetAll: () => void;
 }
 
-const ALL_BOXES = Object.values(DELIVERY_BOXES);
+const ALL_BOXES = Object.values(DELIVERY_BOXES); // 택배 글자 순서
+const PIN_ORDER = [...ALL_BOXES].sort((a, b) => a.pinNumber - b.pinNumber); // 지도 번호 순서
 
 export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   myBox,
@@ -37,13 +37,21 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   const hasCelebratedRef = useRef<boolean>(false);
 
   const [isClueModalOpen, setIsClueModalOpen] = useState<boolean>(false);
+  // 고르기만 한 번호 (정답 확인 전)
+  const [pending, setPending] = useState<Partial<Record<BoxId, number>>>({});
 
   const otherBoxes = ALL_BOXES.filter((b) => b.id !== myBox.id);
-  const answeredCount = otherBoxes.filter((b) => guesses[b.id] !== undefined).length;
-  const isAllFinished = answeredCount === otherBoxes.length;
-  const correctCount = otherBoxes.filter(
-    (b) => guesses[b.id] === b.pinNumber
-  ).length;
+  const isSolved = (b: DeliveryBox) => guesses[b.id] === b.pinNumber;
+  const isAllFinished = otherBoxes.every(isSolved);
+  const hasPending = otherBoxes.some((b) => !isSolved(b) && pending[b.id] !== undefined);
+
+  const handleCheckAll = () => {
+    otherBoxes.forEach((b) => {
+      const pick = pending[b.id];
+      if (!isSolved(b) && pick !== undefined) onGuessBox(b.id, pick);
+    });
+    setPending({});
+  };
 
   useEffect(() => {
     if (isAllFinished && !hasCelebratedRef.current) {
@@ -54,6 +62,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
           particleCount: 100,
           spread: 75,
           origin: { y: 0.6 },
+          colors: ['#9480BD', '#B1D992', '#274480', '#F5BA53', '#BD651D'],
         });
       } catch {
         // ignore
@@ -62,22 +71,16 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   }, [isAllFinished, onAllGuessed]);
 
   const buildPinHtml = (b: DeliveryBox, showCityLabel: boolean, isMine: boolean) => {
-    const bg = isMine
-      ? '#059669'
-      : showCityLabel
-      ? '#14161A'
-      : '#FFCC1F';
-    const fg = isMine || showCityLabel ? '#FFFFFF' : '#14161A';
-    const border = isMine || showCityLabel ? '#FFFFFF' : '#14161A';
+    const bg = showCityLabel ? '#B1D992' : '#F5BA53';
 
     return `
       <div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%);">
-        <div style="width: 32px; height: 32px; border-radius: 9999px; background: ${bg}; border: 2px solid ${border}; color: ${fg}; font-weight: 900; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.45);">
+        <div style="width: 36px; height: 36px; border-radius: 9999px; background: ${bg}; border: 3px solid ${isMine ? '#FFFFFF' : '#274480'}; color: #274480; font-family: 'Pretendard Variable', sans-serif; font-weight: 800; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center;">
           ${b.pinCircle}
         </div>
         ${
           showCityLabel
-            ? `<div style="margin-top: 2px; background: rgba(28, 25, 23, 0.92); color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; white-space: nowrap; border: 1px solid rgba(255,204,31,0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.4);">
+            ? `<div style="margin-top: 3px; background: #274480; color: #FFFFFF; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 3px; white-space: nowrap;">
                 ${b.id}. ${b.cityName}
               </div>`
             : ''
@@ -113,23 +116,24 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
       }
     ).addTo(map);
 
-    // Equator dashed red line
+    // 적도: 흰 점선 (눌리지 않음)
     L.polyline(
       [
         [0, -25],
         [0, 55],
       ],
       {
-        color: '#EF4444',
-        weight: 2.5,
+        color: '#FFFFFF',
+        weight: 2,
         dashArray: '6, 8',
         opacity: 0.9,
+        interactive: false,
       }
     ).addTo(map);
 
     ALL_BOXES.forEach((b) => {
       const isMine = b.id === myBox.id;
-      const showLabel = isMine || guesses[b.id] !== undefined || isAllFinished;
+      const showLabel = isMine || guesses[b.id] === b.pinNumber;
       const icon = L.divIcon({
         className: 'home-group-pin',
         html: buildPinHtml(b, showLabel, isMine),
@@ -137,7 +141,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         iconAnchor: [0, 0],
       });
 
-      const marker = L.marker([b.lat, b.lng], { icon }).addTo(map);
+      const marker = L.marker([b.lat, b.lng], { icon, interactive: false }).addTo(map);
       markersRef.current[b.pinNumber] = marker;
     });
 
@@ -150,13 +154,13 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
     };
   }, []);
 
-  // Update markers whenever guesses or completion change
+  // 정답을 맞힌 택배만 도시 이름 표시
   useEffect(() => {
     ALL_BOXES.forEach((b) => {
       const marker = markersRef.current[b.pinNumber];
       if (!marker) return;
       const isMine = b.id === myBox.id;
-      const showLabel = isMine || guesses[b.id] !== undefined || isAllFinished;
+      const showLabel = isMine || guesses[b.id] === b.pinNumber;
       marker.setIcon(
         L.divIcon({
           className: 'home-group-pin',
@@ -166,18 +170,18 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         })
       );
     });
-  }, [guesses, isAllFinished, myBox.id]);
+  }, [guesses, myBox.id]);
 
   return (
     <div className="w-full max-w-md mx-auto p-3 pb-24 space-y-3.5">
       {/* Header */}
       <div className="flex items-center justify-between gap-2">
         <div>
-          <span className="text-[11px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300 inline-flex items-center gap-1">
+          <span className="text-[11px] font-bold text-navy bg-sun px-2 py-0.5 rounded inline-flex items-center gap-1">
             <Users className="w-3 h-3" />
             <span>5단계: 원모둠 지도</span>
           </span>
-          <h2 className="text-base font-black text-amber-950 mt-0.5">
+          <h2 className="text-lg text-white mt-1">
             친구 설명을 듣고 나머지 택배를 찾으세요
           </h2>
         </div>
@@ -185,126 +189,91 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         <button
           type="button"
           onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-[#F4F4F1] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
+          className="flex items-center gap-1 text-xs font-bold bg-white text-navy px-2.5 py-2 rounded-lg border border-white shrink-0 cursor-pointer"
         >
-          <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+          <BookOpen className="w-3.5 h-3.5" />
           <span>내 택배 요약</span>
         </button>
       </div>
 
-      {/* My Solved Parcel Reminder */}
-      <div className="bg-emerald-50 border border-emerald-400 rounded-xl px-3 py-2 flex items-center justify-between text-xs">
-        <span className="font-bold text-emerald-950">
-          내 택배({myBox.id}): {myBox.pinCircle} {myBox.cityName}({myBox.countryName})
-        </span>
-        <span className="font-mono font-bold text-emerald-800">
-          {answeredCount} / 4 완료
-        </span>
+      {/* 내 택배 */}
+      <div className="bg-white rounded-xl px-3 py-2 text-xs font-bold text-navy">
+        내 택배({myBox.id}): 지도 {myBox.pinCircle}번 · {myBox.cityName}({myBox.countryName})
       </div>
 
-      {/* Map displaying ①~⑤ (reveals city names as solved / all 5 when finished) */}
-      <div className="relative w-full h-[38vh] min-h-[250px] max-h-[340px] rounded-2xl overflow-hidden border border-amber-900/40 shadow-lg">
+      {/* Map */}
+      <div className="relative isolate z-0 w-full h-[38vh] min-h-[250px] max-h-[340px] rounded-2xl overflow-hidden border border-white/40">
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 
-      {/* Final Score Banner when all 4 are finished */}
       {isAllFinished && (
-        <div className="bg-[#F4F4F1] border border-amber-800 rounded-2xl p-4 shadow-md text-center space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 bg-amber-800 text-amber-100 px-3 py-1 rounded-full text-xs font-bold">
-            <Trophy className="w-3.5 h-3.5 text-amber-300" />
-            <span>원모둠 미션 완료!</span>
-          </div>
-          <p className="text-2xl font-black text-amber-950">
-            내가 맞힌 수 {correctCount}/4
-          </p>
-          <p className="text-xs text-stone-700">
-            위 지도에 아프리카 다섯 도시의 위치와 이름이 모두 표시되었습니다.
-          </p>
+        <div className="bg-leaf rounded-2xl p-4 text-center text-navy">
+          <p className="font-display text-xl">원모둠 미션 완료!</p>
+          <p className="text-xs mt-1">지도에 아프리카 다섯 도시의 위치와 이름이 모두 표시되었어요.</p>
         </div>
       )}
 
-      {/* Remaining 4 Parcel Cards */}
+      {/* 나머지 4개 택배 */}
       <div className="space-y-2.5">
         {otherBoxes.map((targetBox) => {
-          const pickedNum = guesses[targetBox.id];
-          const hasPicked = pickedNum !== undefined;
-          const isCorrect = pickedNum === targetBox.pinNumber;
+          const solved = isSolved(targetBox);
+          const committed = guesses[targetBox.id];
+          const wasWrong = !solved && committed !== undefined;
+          const current = solved ? targetBox.pinNumber : pending[targetBox.id];
 
           return (
             <div
               key={targetBox.id}
-              className={`rounded-2xl border p-3.5 shadow-sm transition-all ${
-                !hasPicked
-                  ? 'bg-[#FFFFFF] border-amber-800/25'
-                  : isCorrect
-                  ? 'bg-emerald-50 border-emerald-500'
-                  : 'bg-rose-50 border-rose-400'
+              className={`rounded-2xl border-2 p-3.5 bg-white ${
+                solved ? 'border-leaf' : wasWrong && current === undefined ? 'border-rust' : 'border-white'
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-2 gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-amber-900 text-amber-50 font-black text-xs">
+                  <span className="px-2 py-0.5 rounded bg-navy text-white font-bold text-xs">
                     {targetBox.codeName}
                   </span>
-                  {hasPicked ? (
-                    <span className="text-sm font-black text-stone-900">
+                  {solved ? (
+                    <span className="text-sm font-bold text-navy">
                       {targetBox.cityName} ({targetBox.countryName})
                     </span>
                   ) : (
-                    <span className="text-xs text-stone-500 font-medium">
-                      친구의 설명을 듣고 번호 선택
-                    </span>
+                    <span className="text-xs text-navy/70">친구의 설명을 듣고 번호 선택</span>
                   )}
                 </div>
 
-                {hasPicked && (
-                  <span
-                    className={`text-xs font-extrabold flex items-center gap-1 ${
-                      isCorrect ? 'text-emerald-700' : 'text-rose-700'
-                    }`}
-                  >
-                    {isCorrect ? (
-                      <>
-                        <Check className="w-4 h-4 stroke-[3]" /> 정답 ({targetBox.pinCircle})
-                      </>
-                    ) : (
-                      <>
-                        <X className="w-4 h-4 stroke-[3]" /> 오답 (정답 {targetBox.pinCircle})
-                      </>
-                    )}
+                {solved && (
+                  <span className="text-xs font-bold flex items-center gap-1 text-navy bg-leaf px-2 py-0.5 rounded">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" /> 정답
+                  </span>
+                )}
+                {wasWrong && current === undefined && (
+                  <span className="text-xs font-bold flex items-center gap-1 text-white bg-rust px-2 py-0.5 rounded">
+                    <X className="w-3.5 h-3.5 stroke-[3]" /> 다시 들어 보세요
                   </span>
                 )}
               </div>
 
-              {/* ①~⑤ Selector Row */}
               <div className="grid grid-cols-5 gap-1.5">
-                {ALL_BOXES.map((pinBox) => {
-                  const isThisPicked = pickedNum === pinBox.pinNumber;
-                  const isThisAnswer = targetBox.pinNumber === pinBox.pinNumber;
-
-                  let btnStyle =
-                    'bg-white border-amber-800/20 text-stone-800 hover:bg-amber-50';
-                  if (hasPicked) {
-                    if (isThisAnswer) {
-                      btnStyle =
-                        'bg-emerald-600 border-emerald-700 text-white font-black';
-                    } else if (isThisPicked && !isCorrect) {
-                      btnStyle =
-                        'bg-rose-600 border-rose-700 text-white font-black';
-                    } else {
-                      btnStyle =
-                        'bg-white/60 border-stone-200 text-stone-400';
-                    }
+                {PIN_ORDER.map((pinBox) => {
+                  const isThisPicked = current === pinBox.pinNumber;
+                  let btnStyle = 'bg-white border-navy/30 text-navy';
+                  if (solved) {
+                    btnStyle = isThisPicked ? 'bg-leaf border-navy text-navy' : 'bg-white border-navy/10 text-navy/30';
+                  } else if (isThisPicked) {
+                    btnStyle = 'bg-lav border-navy text-white';
                   }
 
                   return (
                     <button
                       key={pinBox.pinNumber}
                       type="button"
-                      disabled={hasPicked}
-                      onClick={() => onGuessBox(targetBox.id, pinBox.pinNumber)}
-                      className={`min-h-[44px] rounded-xl border font-bold text-sm transition-all ${
-                        hasPicked ? 'cursor-default' : 'cursor-pointer active:scale-95'
+                      disabled={solved}
+                      onClick={() =>
+                        setPending((prev) => ({ ...prev, [targetBox.id]: pinBox.pinNumber }))
+                      }
+                      className={`min-h-[48px] rounded-xl border-2 text-lg font-extrabold transition-all ${
+                        solved ? 'cursor-default' : 'cursor-pointer active:scale-95'
                       } ${btnStyle}`}
                     >
                       {pinBox.pinCircle}
@@ -317,19 +286,31 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         })}
       </div>
 
+      {!isAllFinished && (
+        <button
+          type="button"
+          disabled={!hasPending}
+          onClick={handleCheckAll}
+          className={`w-full min-h-[52px] rounded-xl font-bold text-sm transition-all ${
+            hasPending ? 'bg-sun text-navy cursor-pointer active:scale-[0.98]' : 'bg-white/20 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          {hasPending ? '정답 확인하기' : '번호를 고른 뒤 정답을 확인하세요'}
+        </button>
+      )}
+
       {/* Reset Mission Button */}
       <div className="pt-2">
         <button
           type="button"
           onClick={onResetAll}
-          className="w-full min-h-[46px] py-2.5 px-4 rounded-xl bg-white hover:bg-amber-50 text-stone-700 font-bold text-xs flex items-center justify-center gap-2 border border-amber-800/30 shadow-sm cursor-pointer"
+          className="w-full min-h-[46px] py-2.5 px-4 rounded-xl bg-transparent text-white font-bold text-xs flex items-center justify-center gap-2 border border-white/60 cursor-pointer"
         >
-          <RotateCcw className="w-4 h-4 text-amber-700" />
+          <RotateCcw className="w-4 h-4" />
           <span>새로운 택배·자료로 처음부터 다시하기</span>
         </button>
       </div>
 
-      {/* Full-Screen My Clue Modal for explaining to friends */}
       <FullScreenClueModal
         isOpen={isClueModalOpen}
         box={myBox}

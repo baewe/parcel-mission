@@ -62,19 +62,19 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
             <Users className="w-3 h-3" />
             <span>전문가 집단 모이기</span>
           </span>
-          <h2 className="text-lg font-black text-amber-950 mt-1">
+          <h2 className="text-xl text-white mt-1">
             단서 4개를 모두 종합하세요
           </h2>
         </div>
         <div className="text-right shrink-0">
-          <span className="text-xs font-mono font-bold text-amber-900 bg-[#E6E6E1] px-2.5 py-1 rounded-md border border-amber-800/20">
+          <span className="text-xs font-bold text-amber-900 bg-[#FFFFFF] px-2.5 py-1 rounded-md border border-amber-800/20">
             {completedNotesCount}/4 기록
           </span>
         </div>
       </div>
 
       {/* 4-Media Tab Switcher */}
-      <div className="grid grid-cols-4 gap-1 p-1 bg-[#E6E6E1] rounded-xl border border-amber-800/20 mb-3 shadow-inner">
+      <div className="grid grid-cols-4 gap-1 p-1 bg-[#FFFFFF] rounded-xl border border-amber-800/20 mb-3 shadow-inner">
         {docOrder.map((id) => {
           const meta = DOC_METAS[id];
           const isActive = activeDocId === id;
@@ -119,7 +119,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
       {/* Active Clue Card */}
       <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 shadow-md overflow-hidden">
         {/* Card Header Bar */}
-        <div className="bg-[#F4F4F1] border-b border-amber-800/20 px-3.5 py-2 flex items-center justify-between">
+        <div className="bg-[#FFFFFF] border-b border-amber-800/20 px-3.5 py-2 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-black text-amber-950">
               {activeMeta.label} 단서
@@ -130,7 +130,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
               </span>
             )}
           </div>
-          <span className="text-xs text-stone-500 font-mono">
+          <span className="text-xs text-stone-500">
             {activeIdx + 1} / 4
           </span>
         </div>
@@ -161,7 +161,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
         </div>
 
         {/* Prev / Next Controls */}
-        <div className="bg-[#F4F4F1] border-t border-amber-800/20 px-3 py-2 flex items-center justify-between">
+        <div className="bg-[#FFFFFF] border-t border-amber-800/20 px-3 py-2 flex items-center justify-between">
           <button
             type="button"
             onClick={handlePrev}
@@ -191,10 +191,10 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
         <button
           type="button"
           onClick={onProceedToPin}
-          className="w-full min-h-[52px] py-3.5 px-4 rounded-xl bg-amber-800 hover:bg-amber-900 active:scale-[0.98] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-900/20 transition-all cursor-pointer"
+          className="w-full min-h-[52px] py-3.5 px-4 rounded-xl bg-sun text-navy active:scale-[0.98] font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-900/20 transition-all cursor-pointer"
         >
           <MapPin className="w-4 h-4 text-amber-300" />
-          <span>3단계: 지도에서 배송지 고르기 (①~⑤)</span>
+          <span>3단계: 지도에서 배송지 고르기 (1~5)</span>
         </button>
       </div>
     </div>

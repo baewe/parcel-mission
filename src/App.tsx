@@ -47,7 +47,7 @@ const DEFAULT_PROGRESS: SessionProgress = {
   homeGroupCompleted: false,
 };
 
-const STORAGE_PREFIX = 'afri_express_jigsaw_v2_';
+const STORAGE_PREFIX = 'afri_express_jigsaw_v3_';
 
 function loadSession(boxId: BoxId, docId: DocId): SessionProgress {
   try {
@@ -205,8 +205,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F1] text-stone-900 flex justify-center selection:bg-amber-700 selection:text-white">
-      <div className="w-full max-w-md bg-[#FAFAF8] min-h-screen flex flex-col shadow-2xl relative border-x border-amber-900/10">
+    <div className="min-h-screen bg-[#FFFFFF] text-stone-900 flex justify-center selection:bg-amber-700 selection:text-white">
+      <div className="w-full max-w-md bg-[#274480] min-h-screen flex flex-col shadow-2xl relative border-x border-amber-900/10">
         <HeaderStepper
           currentStep={progress.currentStep}
           boxId={selectedBoxId}

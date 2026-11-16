@@ -40,13 +40,14 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
 }) => {
   const docMeta = DOC_METAS[docId];
   const modelAnswer = box.docs[docId].model;
+  const tipText = box.docs[docId].tip;
   const canSubmit = interpretation.trim().length > 0;
   const canProceedExpert = isSubmitted && selfCheck !== null && interpretation.trim().length > 0;
 
   return (
     <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-4">
       {/* Assigned Role Banner: "당신은 ○○ 담당입니다" */}
-      <div className="bg-[#16181D] text-amber-50 rounded-2xl p-3.5 shadow-md flex items-center justify-between border border-amber-700">
+      <div className="bg-[#274480] text-amber-50 rounded-2xl p-3.5 shadow-md flex items-center justify-between border border-amber-700">
         <div>
           <span className="text-[11px] font-bold text-amber-300 block">
             {box.codeName} · 개인 탐구
@@ -65,7 +66,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
         <span className="text-[11px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
           {stage === 'my_doc' ? '1단계: 내 자료 해석' : '2단계: 모범 해설 · 자기 점검'}
         </span>
-        <h2 className="text-lg font-black text-amber-950 mt-1">
+        <h2 className="text-xl text-white mt-1">
           {stage === 'my_doc'
             ? `${docMeta.label} 자료만 보고 해석을 적으세요`
             : '모범 해설과 비교하고 내 해석을 점검하세요'}
@@ -106,8 +107,8 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             onClick={onSubmitInterpretation}
             className={`w-full min-h-[48px] py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all mt-2 ${
               canSubmit
-                ? 'bg-amber-800 hover:bg-amber-900 active:scale-[0.98] text-white shadow-md cursor-pointer'
-                : 'bg-stone-300 text-stone-500 cursor-not-allowed'
+                ? 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
+                : 'bg-white border border-navy/20 text-navy/40 cursor-not-allowed'
             }`}
           >
             <Send className="w-4 h-4" />
@@ -120,7 +121,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
       {isSubmitted && (
         <div className="space-y-4">
           {/* Model Answer Card */}
-          <div className="bg-[#F4F4F1] rounded-2xl border border-amber-700/50 p-4 shadow-md space-y-2">
+          <div className="bg-[#FFFFFF] rounded-2xl border border-amber-700/50 p-4 shadow-md space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-extrabold text-amber-950">
               <BookOpenCheck className="w-4 h-4 text-amber-800" />
               <span>모범 해설 ({docMeta.label})</span>
@@ -128,6 +129,12 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             <p className="text-xs text-stone-800 leading-relaxed bg-white/80 p-3 rounded-xl border border-amber-800/15">
               {modelAnswer}
             </p>
+            {tipText && (
+              <p className="text-xs leading-relaxed px-3 py-2 rounded-lg bg-sun text-navy">
+                <span className="font-display text-sm mr-1.5">배송지 찾기 팁</span>
+                {tipText}
+              </p>
+            )}
           </div>
 
           {/* Self-check 3-choice buttons */}
@@ -147,7 +154,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
                 onClick={() => onSelectSelfCheck('same')}
                 className={`min-h-[48px] py-2.5 px-2 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                   selfCheck === 'same'
-                    ? 'bg-emerald-600 border-emerald-700 text-white shadow'
+                    ? 'bg-emerald-600 border-emerald-700 text-navy shadow'
                     : 'bg-white border-amber-800/20 text-stone-800 hover:bg-emerald-50'
                 }`}
               >
@@ -190,8 +197,8 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             onClick={onGoToExpertGroup}
             className={`w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
               canProceedExpert
-                ? 'bg-amber-800 hover:bg-amber-900 active:scale-[0.98] text-white shadow-lg shadow-amber-900/20 cursor-pointer'
-                : 'bg-stone-300 text-stone-500 cursor-not-allowed'
+                ? 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
+                : 'bg-white border border-navy/20 text-navy/40 cursor-not-allowed'
             }`}
           >
             <Users className="w-4 h-4 text-amber-300" />

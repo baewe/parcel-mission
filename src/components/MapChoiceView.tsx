@@ -19,7 +19,11 @@ interface MapChoiceViewProps {
   onBackToClues: () => void;
 }
 
-const ALL_BOXES = Object.values(DELIVERY_BOXES);
+// 지도 번호 순서(1~5)로 정렬
+const ALL_BOXES = Object.values(DELIVERY_BOXES).sort((a, b) => a.pinNumber - b.pinNumber);
+const AFRICA_CENTER: [number, number] = [0.0, 20.0];
+const AFRICA_ZOOM = 3.2;
+const PIN_ZOOM = 6;
 
 export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
   box,
@@ -49,30 +53,46 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
       : null
   );
   const [isClueModalOpen, setIsClueModalOpen] = useState<boolean>(false);
+  const isSolvedRef = useRef<boolean>(alreadySolved);
+  useEffect(() => {
+    isSolvedRef.current = isSolved;
+  }, [isSolved]);
 
   // Build pin HTML based on active/solved state
   const createPinHtml = (
-    pinCircle: string,
+    pinLabel: string,
     isSelected: boolean,
     isCorrectSolved: boolean
   ) => {
-    const bg = isCorrectSolved
-      ? '#059669'
-      : isSelected
-      ? '#DC2626'
-      : '#FFCC1F';
-    const fg = isSelected || isCorrectSolved ? '#FFFFFF' : '#14161A';
-    const border = isSelected || isCorrectSolved ? '#FFFFFF' : '#14161A';
-    const scale = isSelected || isCorrectSolved ? 'scale(1.18)' : 'scale(1)';
-    const shadow = isSelected
-      ? '0 0 0 4px rgba(220,38,38,0.35), 0 4px 10px rgba(0,0,0,0.5)'
-      : '0 3px 8px rgba(0,0,0,0.45)';
+    // 기본: 노랑 / 선택: 보라 / 정답: 연두
+    const bg = isCorrectSolved ? '#B1D992' : isSelected ? '#9480BD' : '#F5BA53';
+    const fg = isSelected && !isCorrectSolved ? '#FFFFFF' : '#274480';
+    const border = isSelected || isCorrectSolved ? '#FFFFFF' : '#274480';
+    const size = isSelected || isCorrectSolved ? 44 : 36;
 
     return `
-      <div style="transform: ${scale}; transition: transform 150ms ease; width: 34px; height: 34px; border-radius: 9999px; background: ${bg}; border: 2.5px solid ${border}; color: ${fg}; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: ${shadow}; cursor: pointer;">
-        ${pinCircle}
+      <div style="width: ${size}px; height: ${size}px; margin-left: ${(36 - size) / 2}px; margin-top: ${(36 - size) / 2}px; border-radius: 9999px; background: ${bg}; border: 3px solid ${border}; color: ${fg}; font-family: 'Pretendard Variable', sans-serif; font-weight: 800; font-size: ${size === 44 ? 22 : 18}px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        ${pinLabel}
       </div>
     `;
+  };
+
+  // 번호를 고르면 그 지점으로 확대
+  const zoomToPin = (pin: number) => {
+    const map = mapInstanceRef.current;
+    const target = ALL_BOXES.find((b) => b.pinNumber === pin);
+    if (!map || !target) return;
+    map.flyTo([target.lat, target.lng], PIN_ZOOM, { duration: 0.8 });
+  };
+
+  const showWholeMap = () => {
+    mapInstanceRef.current?.flyTo(AFRICA_CENTER, AFRICA_ZOOM, { duration: 0.8 });
+  };
+
+  const pickPin = (pin: number) => {
+    setSelectedPin(pin);
+    setFeedback((prev) => (prev?.type === 'success' ? prev : null));
+    zoomToPin(pin);
   };
 
   // Initialize Leaflet Map (No place labels)
@@ -81,8 +101,8 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
     if (mapInstanceRef.current) return;
 
     const map = L.map(mapContainerRef.current, {
-      center: [0.0, 20.0],
-      zoom: 3.2,
+      center: AFRICA_CENTER,
+      zoom: AFRICA_ZOOM,
       minZoom: 2.5,
       maxZoom: 8,
       zoomControl: true,
@@ -102,38 +122,34 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
       }
     ).addTo(map);
 
-    // Equator dashed red line
+    // 적도: 흰 점선 (눌리지 않음)
     L.polyline(
       [
         [0, -25],
         [0, 55],
       ],
       {
-        color: '#EF4444',
-        weight: 2.5,
+        color: '#FFFFFF',
+        weight: 2,
         dashArray: '6, 8',
         opacity: 0.9,
+        interactive: false,
       }
-    )
-      .addTo(map)
-      .bindTooltip('적도 (위도 0°)', {
-        permanent: false,
-        direction: 'top',
-      });
+    ).addTo(map);
 
     // Place the 5 numbered city pins (①~⑤) without revealing city names
     ALL_BOXES.forEach((b) => {
       const icon = L.divIcon({
         className: 'custom-numbered-pin',
         html: createPinHtml(b.pinCircle, false, false),
-        iconSize: [34, 34],
-        iconAnchor: [17, 17],
+        iconSize: [36, 36],
+        iconAnchor: [18, 18],
       });
 
       const marker = L.marker([b.lat, b.lng], { icon }).addTo(map);
       marker.on('click', () => {
-        setSelectedPin(b.pinNumber);
-        setFeedback((prev) => (prev?.type === 'success' ? prev : null));
+        if (isSolvedRef.current) return;
+        pickPin(b.pinNumber);
       });
       markersRef.current[b.pinNumber] = marker;
     });
@@ -158,10 +174,11 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
         L.divIcon({
           className: 'custom-numbered-pin',
           html: createPinHtml(b.pinCircle, isSelected, isCorrectSolved),
-          iconSize: [34, 34],
-          iconAnchor: [17, 17],
+          iconSize: [36, 36],
+          iconAnchor: [18, 18],
         })
       );
+      marker.setZIndexOffset(isSelected ? 1000 : 0);
     });
   }, [selectedPin, isSolved, box.pinNumber]);
 
@@ -206,15 +223,15 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
           <span className="text-[11px] font-bold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded border border-amber-300">
             3단계: 배송지 고르기
           </span>
-          <h2 className="text-base font-black text-amber-950 mt-0.5">
-            ①~⑤ 중 배송지 위치를 고르세요
+          <h2 className="text-lg text-white mt-0.5">
+            1~5 중 배송지 위치를 고르세요
           </h2>
         </div>
 
         <button
           type="button"
           onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-[#F4F4F1] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
+          className="flex items-center gap-1 text-xs font-bold bg-[#FFFFFF] text-amber-900 hover:bg-amber-100 px-2.5 py-2 rounded-lg border border-amber-800/30 shadow-sm shrink-0 cursor-pointer"
         >
           <BookOpen className="w-3.5 h-3.5 text-amber-700" />
           <span>단서 다시보기</span>
@@ -223,13 +240,20 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
 
       {/* Instruction strip */}
       <div className="text-[11px] text-stone-700 bg-amber-50/90 px-3 py-1.5 rounded-lg border border-amber-200/90 mb-2 flex items-center justify-between">
-        <span>지도 위의 ①~⑤ 핀 또는 아래 번호를 누르세요</span>
-        <span className="text-red-600 font-bold">적도: 붉은 점선</span>
+        <span>번호를 누르면 그곳이 확대돼요</span>
+        <span className="font-bold">적도: 흰 점선</span>
       </div>
 
       {/* Leaflet Satellite Map (Label-free) */}
-      <div className="relative w-full h-[46vh] min-h-[310px] max-h-[420px] rounded-2xl overflow-hidden border border-amber-900/40 shadow-lg">
+      <div className="relative isolate z-0 w-full h-[46vh] min-h-[310px] max-h-[420px] rounded-2xl overflow-hidden border border-amber-900/40">
         <div ref={mapContainerRef} className="w-full h-full" />
+        <button
+          type="button"
+          onClick={showWholeMap}
+          className="absolute bottom-3 left-3 z-[500] px-3 py-1.5 rounded-lg bg-white text-navy text-xs font-bold border border-navy cursor-pointer"
+        >
+          전체 보기
+        </button>
       </div>
 
       {/* Quick Number Buttons ①~⑤ */}
@@ -242,16 +266,13 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
               key={b.pinNumber}
               type="button"
               disabled={isSolved}
-              onClick={() => {
-                setSelectedPin(b.pinNumber);
-                setFeedback((prev) => (prev?.type === 'success' ? prev : null));
-              }}
-              className={`min-h-[46px] rounded-xl border font-black text-base transition-all cursor-pointer ${
+              onClick={() => pickPin(b.pinNumber)}
+              className={`min-h-[52px] rounded-xl border-2 text-xl font-extrabold transition-all cursor-pointer ${
                 isCorrectSolved
-                  ? 'bg-emerald-600 border-emerald-700 text-white shadow-md'
+                  ? 'bg-leaf border-navy text-navy'
                   : isSelected
-                  ? 'bg-red-600 border-red-700 text-white shadow-md'
-                  : 'bg-white border-amber-800/25 text-amber-950 hover:bg-amber-50'
+                  ? 'bg-lav border-navy text-white'
+                  : 'bg-white border-navy/30 text-navy'
               }`}
             >
               {b.pinCircle}
@@ -309,22 +330,22 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
             onClick={handleCheckDelivery}
             className={`w-full min-h-[50px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all ${
               selectedPin !== null
-                ? 'bg-amber-800 hover:bg-amber-900 active:scale-[0.98] text-white cursor-pointer'
-                : 'bg-stone-300 text-stone-500 cursor-not-allowed'
+                ? 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
+                : 'bg-white border border-navy/20 text-navy/40 cursor-not-allowed'
             }`}
           >
             <PackageCheck className="w-4 h-4" />
             <span>
               {selectedPin !== null
-                ? `${ALL_BOXES.find((b) => b.pinNumber === selectedPin)?.pinCircle}번 위치로 배송하기`
-                : '①~⑤ 중 하나를 선택하세요'}
+                ? `${selectedPin}번 위치로 배송하기 (정답 확인)`
+                : '1~5 중 하나를 고르세요'}
             </span>
           </button>
         ) : (
           <button
             type="button"
             onClick={onProceedToAddress}
-            className="w-full min-h-[52px] py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+            className="w-full min-h-[52px] py-3.5 px-4 rounded-xl bg-sun text-navy active:scale-[0.98] font-bold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer"
           >
             <span>4단계: 주소 문장 완성하기</span>
             <ArrowRight className="w-4 h-4" />
@@ -335,7 +356,7 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
           <button
             type="button"
             onClick={onBackToClues}
-            className="text-xs text-stone-500 hover:text-amber-900 underline underline-offset-2 cursor-pointer"
+            className="text-xs text-white/80 underline underline-offset-2 cursor-pointer"
           >
             ← 단서 4개 화면으로 돌아가기
           </button>

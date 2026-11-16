@@ -40,18 +40,18 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F3F0] text-stone-800 flex justify-center">
-      <div className="w-full max-w-md bg-[#FAFAF8] min-h-screen p-4 pb-12 flex flex-col border-x border-amber-900/10 shadow-xl">
+    <div className="min-h-screen bg-[#274480] text-stone-800 flex justify-center">
+      <div className="w-full max-w-md bg-[#274480] min-h-screen p-4 pb-12 flex flex-col border-x border-amber-900/10 shadow-xl">
         {/* Express Title Header */}
         <div className="text-center mt-2 mb-4">
-          <div className="inline-flex items-center gap-1.5 bg-[#16181D] text-amber-300 text-xs font-bold px-3 py-1 rounded-full tracking-wider mb-2 shadow-sm">
+          <div className="inline-flex items-center gap-1.5 bg-[#274480] text-amber-300 text-xs font-bold px-3 py-1 rounded-full tracking-wider mb-2 shadow-sm">
             <Package className="w-3.5 h-3.5 text-amber-400" />
             <span>AFRI-EXPRESS 직소 탐구</span>
           </div>
-          <h1 className="text-2xl font-black text-amber-950 tracking-tight">
+          <h1 className="text-3xl text-white tracking-tight">
             AFRI-익스프레스 택배 대작전
           </h1>
-          <p className="text-xs text-amber-900/80 mt-1 font-medium">
+          <p className="text-sm text-white/80 mt-1 font-medium">
             내 택배와 담당 자료를 고르고 비밀 배송을 시작하세요!
           </p>
         </div>
@@ -73,10 +73,10 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
         {!pickedBox ? (
           <div className="space-y-3 flex-1">
             <div className="flex items-center justify-between px-1">
-              <h2 className="text-sm font-black text-amber-950">
+              <h2 className="text-base text-white">
                 1. 내가 맡은 택배를 고르세요 (A~E)
               </h2>
-              <span className="text-[11px] font-mono text-amber-800 font-bold">1 / 2</span>
+              <span className="text-[11px] text-white/70 font-bold">1 / 2</span>
             </div>
 
             <div className="space-y-2.5">
@@ -85,10 +85,10 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
                   key={box.id}
                   type="button"
                   onClick={() => setPickedBox(box.id)}
-                  className="w-full min-h-[64px] text-left p-3.5 rounded-xl border bg-[#F4F4F1] border-amber-800/25 hover:border-amber-700 hover:bg-white active:scale-[0.99] transition-all flex items-center justify-between shadow-sm cursor-pointer"
+                  className="w-full min-h-[64px] text-left p-3.5 rounded-xl border bg-[#FFFFFF] border-amber-800/25 hover:border-amber-700 hover:bg-white active:scale-[0.99] transition-all flex items-center justify-between shadow-sm cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-[#E6E6E1] border border-amber-800/30 flex flex-col items-center justify-center font-black text-amber-950 shadow-inner">
+                    <div className="w-12 h-12 rounded-lg bg-[#FFFFFF] border border-amber-800/30 flex flex-col items-center justify-center font-black text-amber-950 shadow-inner">
                       <span className="text-[10px] text-amber-800">택배</span>
                       <span className="text-xl leading-none">{box.id}</span>
                     </div>
@@ -112,7 +112,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
           /* Step B: Select Assigned Document (1~4) */
           <div className="space-y-4 flex-1">
             {/* Chosen Box Pill Summary + Back Button */}
-            <div className="flex items-center justify-between bg-[#E6E6E1] px-3.5 py-2.5 rounded-xl border border-amber-800/25">
+            <div className="flex items-center justify-between bg-[#FFFFFF] px-3.5 py-2.5 rounded-xl border border-amber-800/25">
               <div className="flex items-center gap-2">
                 <span className="bg-amber-800 text-white font-black text-xs px-2 py-0.5 rounded">
                   {DELIVERY_BOXES[pickedBox].codeName}
@@ -134,10 +134,10 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
 
             <div>
               <div className="flex items-center justify-between px-1 mb-2.5">
-                <h2 className="text-sm font-black text-amber-950">
+                <h2 className="text-base text-white">
                   2. 내가 맡은 자료 1개를 고르세요
                 </h2>
-                <span className="text-[11px] font-mono text-amber-800 font-bold">2 / 2</span>
+                <span className="text-[11px] text-white/70 font-bold">2 / 2</span>
               </div>
 
               <div className="grid grid-cols-1 gap-2.5">
@@ -160,7 +160,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
                           className={`w-11 h-11 rounded-lg flex items-center justify-center font-bold ${
                             isSelected
                               ? 'bg-amber-700 text-amber-100'
-                              : 'bg-[#F4F4F1] text-amber-900 border border-amber-800/20'
+                              : 'bg-[#FFFFFF] text-amber-900 border border-amber-800/20'
                           }`}
                         >
                           {docIcons[dId]}
@@ -187,7 +187,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
 
             {/* Confirmation Notice: "당신은 ○○ 담당입니다" */}
             {pickedDoc && (
-              <div className="mt-4 bg-[#F4F4F1] border border-amber-800 rounded-2xl p-4 shadow-md space-y-3">
+              <div className="mt-4 bg-[#FFFFFF] border border-amber-800 rounded-2xl p-4 shadow-md space-y-3">
                 <div className="text-center">
                   <span className="text-[11px] font-bold text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full">
                     배정 완료
@@ -203,7 +203,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
                 <button
                   type="button"
                   onClick={() => onStartMission(pickedBox, pickedDoc)}
-                  className="w-full min-h-[52px] py-3.5 px-4 rounded-xl bg-amber-800 hover:bg-amber-900 active:scale-[0.98] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                  className="w-full min-h-[52px] py-3.5 px-4 rounded-xl bg-sun text-navy active:scale-[0.98] font-bold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                 >
                   <span>1단계: 내 자료 해석 시작하기</span>
                   <ArrowRight className="w-4 h-4" />
@@ -213,7 +213,7 @@ export const StartSelectView: React.FC<StartSelectViewProps> = ({
           </div>
         )}
 
-        <div className="mt-6 pt-3 border-t border-amber-900/15 text-center text-[11px] text-stone-500">
+        <div className="mt-6 pt-3 border-t border-white/20 text-center text-[11px] text-white/60">
           URL 바로가기 예시: <span className="font-mono">?box=A&doc=1</span>
         </div>
       </div>

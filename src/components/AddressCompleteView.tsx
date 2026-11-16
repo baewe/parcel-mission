@@ -3,7 +3,6 @@ import confetti from 'canvas-confetti';
 import {
   Check,
   X,
-  ShieldAlert,
   BookOpen,
   Users,
   FileText,
@@ -31,6 +30,8 @@ interface AddressCompleteViewProps {
   onGoToHomeGroup: () => void;
 }
 
+type Field = 'region' | 'equatorSide' | 'environment';
+
 export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
   box,
   notes,
@@ -48,14 +49,33 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
   const [isClueModalOpen, setIsClueModalOpen] = useState<boolean>(false);
   const hasTriggeredCelebrationRef = useRef<boolean>(false);
 
-  const isRegionCorrect = selectedRegion === box.address.region;
-  const isEquatorCorrect = selectedEquatorSide === box.address.equatorSide;
-  const isEnvCorrect = selectedEnvironment === box.address.environment;
+  const current: Record<Field, string> = {
+    region: selectedRegion,
+    equatorSide: selectedEquatorSide,
+    environment: selectedEnvironment,
+  };
+  const answer: Record<Field, string> = {
+    region: box.address.region,
+    equatorSide: box.address.equatorSide,
+    environment: box.address.environment,
+  };
+  const allCorrectNow = (Object.keys(answer) as Field[]).every((f) => current[f] === answer[f]);
 
-  const isAllThreeCorrect = isRegionCorrect && isEquatorCorrect && isEnvCorrect;
+  // '정답 확인하기'를 누른 순간의 선택을 기억 (이미 다 맞힌 상태로 돌아오면 확인된 것으로 봄)
+  const [checked, setChecked] = useState<Record<Field, string> | null>(
+    allCorrectNow ? { ...current } : null
+  );
+
+  // 확인한 뒤 바꾸지 않은 칸만 결과 표시
+  const resultOf = (f: Field): 'correct' | 'wrong' | null => {
+    if (!checked || !current[f] || checked[f] !== current[f]) return null;
+    return current[f] === answer[f] ? 'correct' : 'wrong';
+  };
+  const isDone = (Object.keys(answer) as Field[]).every((f) => resultOf(f) === 'correct');
+  const allFilled = !!(selectedRegion && selectedEquatorSide && selectedEnvironment);
 
   useEffect(() => {
-    if (isAllThreeCorrect && !hasTriggeredCelebrationRef.current) {
+    if (isDone && !hasTriggeredCelebrationRef.current) {
       hasTriggeredCelebrationRef.current = true;
       onAddressAllCorrect();
       try {
@@ -63,296 +83,199 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
           particleCount: 90,
           spread: 70,
           origin: { y: 0.55 },
-          colors: ['#FFCC1F', '#14161A', '#1E8E3E', '#D7261E'],
+          colors: ['#9480BD', '#B1D992', '#274480', '#F5BA53', '#BD651D'],
         });
       } catch {
         // ignore if confetti fails
       }
     }
-  }, [isAllThreeCorrect, onAddressAllCorrect]);
+  }, [isDone, onAddressAllCorrect]);
 
   const docOrder: DocId[] = ['1', '2', '3', '4'];
 
+  const blankClass = (f: Field) => {
+    const r = resultOf(f);
+    if (!current[f]) return 'bg-white border-navy/40 text-navy/40';
+    if (r === 'correct') return 'bg-leaf border-navy text-navy';
+    if (r === 'wrong') return 'bg-rust border-rust text-white';
+    return 'bg-lav border-lav text-white';
+  };
+
+  const optionClass = (f: Field, opt: string) => {
+    if (current[f] !== opt) return 'bg-white border-navy/30 text-navy';
+    const r = resultOf(f);
+    if (r === 'correct') return 'bg-leaf border-navy text-navy';
+    if (r === 'wrong') return 'bg-rust border-rust text-white';
+    return 'bg-lav border-navy text-white';
+  };
+
+  const ResultTag = ({ f }: { f: Field }) => {
+    const r = resultOf(f);
+    if (r === 'correct')
+      return (
+        <span className="text-xs font-bold flex items-center gap-1 text-navy bg-leaf px-2 py-0.5 rounded shrink-0">
+          <Check className="w-3.5 h-3.5 stroke-[3]" /> 정답
+        </span>
+      );
+    if (r === 'wrong')
+      return (
+        <span className="text-xs font-bold flex items-center gap-1 text-white bg-rust px-2 py-0.5 rounded shrink-0">
+          <X className="w-3.5 h-3.5 stroke-[3]" /> 다시 골라 보세요
+        </span>
+      );
+    return null;
+  };
+
+  const choose = (f: Field, val: string) => {
+    if (isDone) return;
+    if (f === 'region') onChangeRegion(val);
+    if (f === 'equatorSide') onChangeEquatorSide(val);
+    if (f === 'environment') onChangeEnvironment(val);
+  };
+
   return (
     <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-4">
-      {/* Revealed City Banner */}
-      <div className="bg-[#F4F4F1] rounded-2xl border border-amber-800/40 p-4 shadow-md text-center relative overflow-hidden">
-        <span className="inline-block text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-400 px-2.5 py-0.5 rounded-full mb-1.5">
+      {/* 배송지 공개 */}
+      <div className="bg-white rounded-2xl p-4 text-center">
+        <span className="inline-block text-[11px] font-bold text-navy bg-sun px-2.5 py-0.5 rounded mb-1.5">
           4단계: 주소 문장 완성
         </span>
-        <h2 className="text-2xl font-black text-amber-950 tracking-tight">
+        <h2 className="text-2xl text-navy">
           배송지: {box.cityName}({box.countryName})
         </h2>
-        <div className="mt-2.5 bg-rose-50 border border-rose-300 rounded-xl px-3 py-2 flex items-center justify-center gap-1.5 text-rose-900 text-xs font-bold">
-          <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
-          <span>도시 이름은 배송 회의 전까지 비밀!</span>
-        </div>
       </div>
 
-      {/* Header + Clue Review Trigger */}
       <div className="flex items-center justify-between px-1">
-        <span className="text-xs font-extrabold text-amber-950 flex items-center gap-1.5">
-          <FileText className="w-4 h-4 text-amber-700" />
-          <span>세 빈칸을 모두 맞혀 주소를 완성하세요</span>
+        <span className="text-sm font-bold text-white flex items-center gap-1.5">
+          <FileText className="w-4 h-4" />
+          <span>세 빈칸을 채워 주소를 완성하세요</span>
         </span>
         <button
           type="button"
           onClick={() => setIsClueModalOpen(true)}
-          className="flex items-center gap-1 text-xs font-bold bg-[#F4F4F1] text-amber-900 hover:bg-amber-100 px-2.5 py-1.5 rounded-lg border border-amber-800/25 shadow-sm cursor-pointer"
+          className="flex items-center gap-1 text-xs font-bold bg-white text-navy px-2.5 py-1.5 rounded-lg cursor-pointer"
         >
-          <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+          <BookOpen className="w-3.5 h-3.5" />
           <span>단서 보기</span>
         </button>
       </div>
 
-      {/* Live Address Sentence Card */}
-      <div className="bg-[#F4F4F1] p-4 rounded-2xl border border-amber-800/25 shadow-inner">
-        <p className="text-sm font-bold text-stone-800 leading-loose">
+      {/* 주소 문장 */}
+      <div className="bg-white p-4 rounded-2xl">
+        <p className="text-sm font-bold text-navy leading-loose">
           "이 도시는 아프리카{' '}
-          <span
-            className={`inline-block px-2 py-0.5 rounded border font-black ${
-              !selectedRegion
-                ? 'bg-white border-amber-400 text-stone-400'
-                : isRegionCorrect
-                ? 'bg-emerald-100 border-emerald-500 text-emerald-900'
-                : 'bg-rose-100 border-rose-400 text-rose-900'
-            }`}
-          >
+          <span className={`inline-block px-2 py-0.5 rounded border ${blankClass('region')}`}>
             {selectedRegion || '칸1'}
           </span>
           에 있고, 적도의{' '}
-          <span
-            className={`inline-block px-2 py-0.5 rounded border font-black ${
-              !selectedEquatorSide
-                ? 'bg-white border-amber-400 text-stone-400'
-                : isEquatorCorrect
-                ? 'bg-emerald-100 border-emerald-500 text-emerald-900'
-                : 'bg-rose-100 border-rose-400 text-rose-900'
-            }`}
-          >
+          <span className={`inline-block px-2 py-0.5 rounded border ${blankClass('equatorSide')}`}>
             {selectedEquatorSide || '칸2'}
           </span>
           에 있으며,{' '}
-          <span
-            className={`inline-block px-2 py-0.5 rounded border font-black ${
-              !selectedEnvironment
-                ? 'bg-white border-amber-400 text-stone-400'
-                : isEnvCorrect
-                ? 'bg-emerald-100 border-emerald-500 text-emerald-900'
-                : 'bg-rose-100 border-rose-400 text-rose-900'
-            }`}
-          >
+          <span className={`inline-block px-2 py-0.5 rounded border ${blankClass('environment')}`}>
             {selectedEnvironment || '칸3'}
           </span>
           에 자리 잡고 있다."
         </p>
       </div>
 
-      {/* Blank 1: Region */}
-      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5 shadow-sm space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-black text-amber-950">칸 1. 아프리카의 어느 지역인가요?</span>
-          {selectedRegion && (
-            <span
-              className={`text-xs font-extrabold flex items-center gap-1 ${
-                isRegionCorrect ? 'text-emerald-700' : 'text-rose-600'
-              }`}
-            >
-              {isRegionCorrect ? (
-                <>
-                  <Check className="w-4 h-4 stroke-[3]" /> 정답
-                </>
-              ) : (
-                <>
-                  <X className="w-4 h-4 stroke-[3]" /> 오답
-                </>
-              )}
-            </span>
-          )}
+      {/* 칸 1 */}
+      <div className="bg-white rounded-2xl p-3.5 space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-sm font-bold text-navy">칸 1. 아프리카의 어느 지역인가요?</span>
+          <ResultTag f="region" />
         </div>
-
         <div className="grid grid-cols-5 gap-1.5">
-          {ADDRESS_OPTIONS.region.map((opt) => {
-            const isPicked = selectedRegion === opt;
-            const correctStyle = isPicked && isRegionCorrect;
-            const wrongStyle = isPicked && !isRegionCorrect;
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => onChangeRegion(opt)}
-                className={`min-h-[44px] rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                  correctStyle
-                    ? 'bg-emerald-600 border-emerald-700 text-white shadow'
-                    : wrongStyle
-                    ? 'bg-rose-600 border-rose-700 text-white shadow'
-                    : 'bg-white border-amber-800/20 text-stone-800 hover:bg-amber-50'
-                }`}
-              >
-                {opt}
-              </button>
-            );
-          })}
+          {ADDRESS_OPTIONS.region.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => choose('region', opt)}
+              className={`min-h-[44px] rounded-xl border-2 text-sm font-bold transition-all cursor-pointer ${optionClass('region', opt)}`}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
-
-        {selectedRegion && !isRegionCorrect && (
-          <p className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200">
-            ✘ 단서 자료를 다시 보세요
-          </p>
-        )}
       </div>
 
-      {/* Blank 2: Equator Side */}
-      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5 shadow-sm space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-black text-amber-950">칸 2. 적도의 어느 쪽에 있나요?</span>
-          {selectedEquatorSide && (
-            <span
-              className={`text-xs font-extrabold flex items-center gap-1 ${
-                isEquatorCorrect ? 'text-emerald-700' : 'text-rose-600'
-              }`}
-            >
-              {isEquatorCorrect ? (
-                <>
-                  <Check className="w-4 h-4 stroke-[3]" /> 정답
-                </>
-              ) : (
-                <>
-                  <X className="w-4 h-4 stroke-[3]" /> 오답
-                </>
-              )}
-            </span>
-          )}
+      {/* 칸 2 */}
+      <div className="bg-white rounded-2xl p-3.5 space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-sm font-bold text-navy">칸 2. 적도의 어느 쪽에 있나요?</span>
+          <ResultTag f="equatorSide" />
         </div>
-
         <div className="grid grid-cols-2 gap-2">
-          {ADDRESS_OPTIONS.equatorSide.map((opt) => {
-            const isPicked = selectedEquatorSide === opt;
-            const correctStyle = isPicked && isEquatorCorrect;
-            const wrongStyle = isPicked && !isEquatorCorrect;
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => onChangeEquatorSide(opt)}
-                className={`min-h-[44px] rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                  correctStyle
-                    ? 'bg-emerald-600 border-emerald-700 text-white shadow'
-                    : wrongStyle
-                    ? 'bg-rose-600 border-rose-700 text-white shadow'
-                    : 'bg-white border-amber-800/20 text-stone-800 hover:bg-amber-50'
-                }`}
-              >
-                적도의 {opt}
-              </button>
-            );
-          })}
-        </div>
-
-        {selectedEquatorSide && !isEquatorCorrect && (
-          <p className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200">
-            ✘ 단서 자료를 다시 보세요
-          </p>
-        )}
-      </div>
-
-      {/* Blank 3: Natural Environment */}
-      <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5 shadow-sm space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-black text-amber-950">칸 3. 어떤 자연환경에 자리 잡고 있나요?</span>
-          {selectedEnvironment && (
-            <span
-              className={`text-xs font-extrabold flex items-center gap-1 shrink-0 ${
-                isEnvCorrect ? 'text-emerald-700' : 'text-rose-600'
-              }`}
+          {ADDRESS_OPTIONS.equatorSide.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => choose('equatorSide', opt)}
+              className={`min-h-[44px] rounded-xl border-2 text-sm font-bold transition-all cursor-pointer ${optionClass('equatorSide', opt)}`}
             >
-              {isEnvCorrect ? (
-                <>
-                  <Check className="w-4 h-4 stroke-[3]" /> 정답
-                </>
-              ) : (
-                <>
-                  <X className="w-4 h-4 stroke-[3]" /> 오답
-                </>
-              )}
-            </span>
-          )}
+              적도의 {opt}
+            </button>
+          ))}
         </div>
-
-        <div className="space-y-1.5">
-          {ADDRESS_OPTIONS.environment.map((opt) => {
-            const isPicked = selectedEnvironment === opt;
-            const correctStyle = isPicked && isEnvCorrect;
-            const wrongStyle = isPicked && !isEnvCorrect;
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => onChangeEnvironment(opt)}
-                className={`w-full min-h-[44px] px-3 py-2 rounded-xl border text-xs font-bold text-left transition-all flex items-center justify-between cursor-pointer ${
-                  correctStyle
-                    ? 'bg-emerald-600 border-emerald-700 text-white shadow'
-                    : wrongStyle
-                    ? 'bg-rose-600 border-rose-700 text-white shadow'
-                    : 'bg-white border-amber-800/20 text-stone-800 hover:bg-amber-50'
-                }`}
-              >
-                <span>{opt}</span>
-                {correctStyle && <Check className="w-4 h-4 shrink-0" />}
-                {wrongStyle && <X className="w-4 h-4 shrink-0" />}
-              </button>
-            );
-          })}
-        </div>
-
-        {selectedEnvironment && !isEnvCorrect && (
-          <p className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200">
-            ✘ 단서 자료를 다시 보세요
-          </p>
-        )}
       </div>
 
-      {/* Delivery Completed Stamp + Decisive Document Selection (Unlocks ONLY when all 3 are correct!) */}
-      {isAllThreeCorrect && (
+      {/* 칸 3 */}
+      <div className="bg-white rounded-2xl p-3.5 space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-sm font-bold text-navy">칸 3. 어떤 자연환경에 자리 잡고 있나요?</span>
+          <ResultTag f="environment" />
+        </div>
+        <div className="space-y-1.5">
+          {ADDRESS_OPTIONS.environment.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => choose('environment', opt)}
+              className={`w-full min-h-[44px] px-3 py-2 rounded-xl border-2 text-sm font-bold text-left transition-all cursor-pointer ${optionClass('environment', opt)}`}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 정답 확인 */}
+      {!isDone && (
+        <button
+          type="button"
+          disabled={!allFilled}
+          onClick={() => setChecked({ ...current })}
+          className={`w-full min-h-[52px] rounded-xl font-bold text-sm transition-all ${
+            allFilled ? 'bg-sun text-navy cursor-pointer active:scale-[0.98]' : 'bg-white/20 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          {allFilled ? '정답 확인하기' : '세 칸을 모두 고른 뒤 정답을 확인하세요'}
+        </button>
+      )}
+
+      {/* 배송 완료 */}
+      {isDone && (
         <div className="space-y-4 pt-2">
-          <div className="relative bg-[#FFFFFF] rounded-2xl border-4 border-[#16181D] p-5 shadow-xl overflow-hidden">
-            {/* Red Stamp Animation */}
+          <div className="bg-white rounded-2xl p-5">
             <div className="flex justify-center mb-3">
-              <div className="animate-stamp inline-block border-4 border-red-600 text-red-600 rounded-xl px-4 py-2 font-black text-center shadow-lg bg-white/90 select-none">
-                <div className="text-[10px] uppercase tracking-widest font-mono">
-                  AFRI-EXPRESS
-                </div>
-                <div className="text-2xl tracking-tight leading-none my-0.5">
-                  배송 완료
-                </div>
-                <div className="text-[9px] font-mono tracking-wider">
-                  DELIVERY COMPLETED
-                </div>
+              <div className="animate-stamp inline-block border-4 border-rust text-rust rounded-lg px-5 py-2 text-center select-none">
+                <div className="text-3xl leading-none">배송 완료</div>
               </div>
             </div>
 
-            <div className="bg-[#F4F4F1] p-4 rounded-xl border border-amber-800/25 text-center">
-              <span className="text-[11px] font-bold text-amber-800 block mb-1">
-                완성된 배송 주소
-              </span>
-              <p className="text-base font-black text-amber-950 leading-relaxed">
-                "이 도시는 아프리카{' '}
-                <span className="text-red-700 underline">{selectedRegion}</span>에 있고, 적도의{' '}
-                <span className="text-red-700 underline">{selectedEquatorSide}</span>에 있으며,{' '}
-                <span className="text-red-700 underline">{selectedEnvironment}</span>에 자리 잡고 있다."
+            <div className="p-4 rounded-xl border border-navy/20 text-center">
+              <span className="text-xs font-bold text-navy/70 block mb-1">완성된 배송 주소</span>
+              <p className="text-base font-bold text-navy leading-relaxed">
+                "이 도시는 아프리카 <u>{selectedRegion}</u>에 있고, 적도의 <u>{selectedEquatorSide}</u>에
+                있으며, <u>{selectedEnvironment}</u>에 자리 잡고 있다."
               </p>
             </div>
           </div>
 
-          {/* Decisive Document Selection (①~④) */}
-          <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/30 p-4 shadow-sm space-y-3">
+          <div className="bg-white rounded-2xl p-4 space-y-3">
             <div>
-              <h3 className="text-xs font-black text-amber-950">
-                이 도시를 찾는 데 가장 결정적이었던 자료는?
-              </h3>
-              <p className="text-[11px] text-stone-600 mt-0.5">
-                ①~④ 중 하나를 고르면 원모둠 지도로 이동할 수 있습니다.
-              </p>
+              <h3 className="text-sm font-bold text-navy">이 도시를 찾는 데 가장 결정적이었던 자료는?</h3>
+              <p className="text-xs text-navy/70 mt-0.5">하나를 고르면 원모둠 지도로 이동할 수 있어요.</p>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -364,10 +287,8 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
                     key={dId}
                     type="button"
                     onClick={() => onSelectDecisiveDoc(dId)}
-                    className={`min-h-[46px] p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-amber-800 border-amber-900 text-white shadow'
-                        : 'bg-white border-amber-800/25 text-stone-800 hover:bg-amber-50'
+                    className={`min-h-[46px] p-2.5 rounded-xl border-2 text-sm font-bold transition-all cursor-pointer ${
+                      isSelected ? 'bg-lav border-navy text-white' : 'bg-white border-navy/30 text-navy'
                     }`}
                   >
                     {meta.label}
@@ -377,28 +298,22 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
             </div>
           </div>
 
-          {/* CTA to Step 5: 원모둠 지도 */}
           <button
             type="button"
             disabled={!decisiveDocId}
             onClick={onGoToHomeGroup}
-            className={`w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all ${
+            className={`w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
               decisiveDocId
-                ? 'bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white cursor-pointer'
-                : 'bg-stone-300 text-stone-500 cursor-not-allowed'
+                ? 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
+                : 'bg-white/20 text-white/60 cursor-not-allowed'
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>
-              {decisiveDocId
-                ? '원모둠으로 돌아가기 (5단계 원모둠 지도)'
-                : '결정적 자료 ①~④ 중 하나를 고르세요'}
-            </span>
+            <span>{decisiveDocId ? '원모둠으로 돌아가기' : '결정적 자료를 하나 고르세요'}</span>
           </button>
         </div>
       )}
 
-      {/* Full-Screen Clue Review Modal */}
       <FullScreenClueModal
         isOpen={isClueModalOpen}
         box={box}

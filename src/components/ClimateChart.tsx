@@ -37,7 +37,7 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
   const activeData = selectedMonth !== null ? data.find((d) => d.month === selectedMonth) : null;
 
   return (
-    <div className="w-full bg-[#F4F4F1] p-3 rounded-xl border border-amber-800/20 shadow-inner">
+    <div className="w-full bg-[#FFFFFF] p-3 rounded-xl border border-amber-800/20 shadow-inner">
       <div className="flex items-center justify-between text-xs mb-2">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1 font-semibold text-rose-700">
@@ -81,7 +81,7 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
                   x={padding.left - 5}
                   y={y + 3}
                   textAnchor="end"
-                  className="text-[9px] fill-rose-800 font-mono font-medium"
+                  className="text-[9px] fill-rose-800 font-medium"
                 >
                   {tempVal}
                 </text>
@@ -90,7 +90,7 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
                   x={padding.left + chartW + 5}
                   y={y + 3}
                   textAnchor="start"
-                  className="text-[9px] fill-sky-800 font-mono font-medium"
+                  className="text-[9px] fill-sky-800 font-medium"
                 >
                   {rainVal}
                 </text>
@@ -174,10 +174,10 @@ export const ClimateChart: React.FC<ClimateChartProps> = ({ data, climateType })
               {activeData.month}월 상세 정보:
             </span>
             <div className="flex items-center gap-3">
-              <span className="text-rose-700 font-mono font-bold">
+              <span className="text-rose-700 font-bold">
                 기온: {activeData.temp.toFixed(1)}℃
               </span>
-              <span className="text-sky-700 font-mono font-bold">
+              <span className="text-sky-700 font-bold">
                 강수량: {activeData.rain}mm
               </span>
             </div>

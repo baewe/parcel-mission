@@ -49,9 +49,9 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-[#F3F3F0] border-b border-amber-900/15 shadow-sm">
+    <header className="sticky top-0 z-[1100] bg-[#274480] border-b border-amber-900/15 shadow-sm">
       {/* Top Waybill Strip */}
-      <div className="bg-[#16181D] text-amber-100 px-3.5 py-2 flex items-center justify-between gap-2">
+      <div className="bg-[#274480] text-amber-100 px-3.5 py-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <span className="bg-amber-500 text-stone-900 font-extrabold text-[11px] px-1.5 py-0.5 rounded tracking-wider shrink-0">
             AFRI-EXPRESS
@@ -100,10 +100,10 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black transition-all ${
                     isDone
-                      ? 'bg-emerald-600 text-white shadow-sm'
+                      ? 'bg-emerald-600 text-navy shadow-sm'
                       : isCurrent
-                      ? 'bg-amber-800 text-white ring-3 ring-amber-300 shadow'
-                      : 'bg-[#E6E6E1] text-stone-600'
+                      ? 'bg-sun text-navy ring-3 ring-white'
+                      : 'bg-[#FFFFFF] text-stone-600'
                   }`}
                 >
                   {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : idx + 1}
