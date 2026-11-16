@@ -1,8 +1,0 @@
-{
-  "name": "Remix Untitled",
-  "description": "사진 추가",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
