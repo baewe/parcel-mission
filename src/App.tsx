@@ -78,6 +78,29 @@ function saveSession(boxId: BoxId, docId: DocId, progress: SessionProgress) {
   }
 }
 
+// 새로 시작할 때는 이전 기록을 지움. 같은 탭에서 새로고침한 경우에만 이어서 진행
+// (sessionStorage는 탭을 닫으면 사라지므로, 기기를 돌려 써도 다음 학생은 빈 상태로 시작)
+const activeKey = (boxId: BoxId, docId: DocId) => `${STORAGE_PREFIX}active_${boxId}_${docId}`;
+
+function startFresh(boxId: BoxId, docId: DocId): SessionProgress {
+  try {
+    localStorage.removeItem(`${STORAGE_PREFIX}${boxId}_${docId}`);
+    sessionStorage.setItem(activeKey(boxId, docId), '1');
+  } catch {
+    // ignore
+  }
+  return { ...DEFAULT_PROGRESS, notes: { ...DEFAULT_PROGRESS.notes } };
+}
+
+function resumeOrStart(boxId: BoxId, docId: DocId): SessionProgress {
+  try {
+    if (sessionStorage.getItem(activeKey(boxId, docId))) return loadSession(boxId, docId);
+  } catch {
+    // ignore
+  }
+  return startFresh(boxId, docId);
+}
+
 function parseUrlParams(): { boxId: BoxId | null; docId: DocId | null } {
   const params = new URLSearchParams(window.location.search);
   const rawBox = params.get('box')?.toUpperCase();
@@ -103,7 +126,7 @@ export default function App() {
 
   const [progress, setProgress] = useState<SessionProgress>(() => {
     if (initialUrl.boxId && initialUrl.docId) {
-      return loadSession(initialUrl.boxId, initialUrl.docId);
+      return resumeOrStart(initialUrl.boxId, initialUrl.docId);
     }
     return { ...DEFAULT_PROGRESS, notes: { ...DEFAULT_PROGRESS.notes } };
   });
@@ -117,7 +140,7 @@ export default function App() {
       if (boxId && docId) {
         setSelectedBoxId(boxId);
         setSelectedDocId(docId);
-        setProgress(loadSession(boxId, docId));
+        setProgress(resumeOrStart(boxId, docId));
       } else {
         setSelectedBoxId(null);
         setSelectedDocId(null);
@@ -135,7 +158,7 @@ export default function App() {
   }, [selectedBoxId, selectedDocId, progress]);
 
   const handleStartMission = (boxId: BoxId, docId: DocId) => {
-    const loaded = loadSession(boxId, docId);
+    const loaded = startFresh(boxId, docId);
     setSelectedBoxId(boxId);
     setSelectedDocId(docId);
     setProgress(loaded);
