@@ -1,6 +1,7 @@
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import { AnswerKeyView } from './components/AnswerKeyView';
+import 'leaflet/dist/leaflet.css';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import './index.css';
 
