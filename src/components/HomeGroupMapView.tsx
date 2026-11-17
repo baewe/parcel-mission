@@ -195,7 +195,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         <div>
           <span className="text-[11px] font-bold text-navy bg-sun px-2 py-0.5 rounded inline-flex items-center gap-1">
             <Users className="w-3 h-3" />
-            <span>5단계: 원모둠 지도</span>
+            <span>5단계: 택배센터 모둠 지도</span>
           </span>
           <h2 className="text-lg text-navy mt-1">
             친구 설명을 듣고 나머지 택배를 찾으세요

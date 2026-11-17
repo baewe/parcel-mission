@@ -276,7 +276,7 @@ export const AddressCompleteView: React.FC<AddressCompleteViewProps> = ({
             className="w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all bg-sun text-navy active:scale-[0.98] cursor-pointer"
           >
             <Users className="w-4 h-4" />
-            <span>원모둠으로 돌아가기</span>
+            <span>택배센터 모둠으로 돌아가기</span>
           </button>
         </div>
       )}

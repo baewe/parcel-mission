@@ -26,7 +26,7 @@ const STEP_LIST: { key: StepType; label: string }[] = [
   { key: 'clues', label: '단서' },
   { key: 'pin', label: '배송지' },
   { key: 'address', label: '주소' },
-  { key: 'home_group', label: '원모둠' },
+  { key: 'home_group', label: '택배센터' },
 ];
 
 export const HeaderStepper: React.FC<HeaderStepperProps> = ({

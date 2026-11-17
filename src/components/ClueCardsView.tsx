@@ -60,7 +60,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
         <div>
           <span className="text-[11px] font-bold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded border border-amber-300 inline-flex items-center gap-1">
             <Users className="w-3 h-3" />
-            <span>전문가 집단 모이기</span>
+            <span>배송 전문가 모둠</span>
           </span>
           <h2 className="text-xl text-navy mt-1">
             단서 4개를 모두 종합하세요

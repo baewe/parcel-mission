@@ -212,7 +212,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             ) : null}
           </div>
 
-          {/* CTA: '전문가 집단 모이기' */}
+          {/* CTA: '배송 전문가 모둠 모이기' */}
           <button
             type="button"
             disabled={!canProceedExpert}
@@ -226,7 +226,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             <Users className="w-4 h-4 text-amber-300" />
             <span>
               {canProceedExpert
-                ? '전문가 집단 모이기 (단서 4개 모두 보기)'
+                ? '배송 전문가 모둠 모이기'
                 : selfCheck === null
                 ? '자기 점검 후에 넘어갈 수 있어요'
                 : '해석을 보완한 뒤 넘어갈 수 있어요'}

@@ -205,12 +205,12 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
     if (pickedNorth !== targetNorth) {
       setFeedback({
         type: 'error',
-        message: '적도의 북쪽·남쪽을 다시 생각해 보세요 → 모둠 친구들의 자료 해석을 다시 들어 보세요',
+        message: '적도의 북쪽·남쪽을 다시 생각해 보세요 → 배송 전문가 모둠 친구들의 해석을 다시 들어 보세요',
       });
     } else {
       setFeedback({
         type: 'error',
-        message: '대륙의 어느 쪽인지 다시 보세요 → 모둠 친구들의 자료 해석을 다시 들어 보세요',
+        message: '대륙의 어느 쪽인지 다시 보세요 → 배송 전문가 모둠 친구들의 해석을 다시 들어 보세요',
       });
     }
   };

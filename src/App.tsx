@@ -28,7 +28,7 @@ interface SessionProgress {
   addressCompleted: boolean;
   decisiveDocId: DocId | null;
   homeGroupGuesses: Partial<Record<BoxId, number>>;
-  friendNotes: Partial<Record<BoxId, string>>; // 원모둠에서 친구 설명을 듣고 적은 메모
+  friendNotes: Partial<Record<BoxId, string>>; // 택배센터 모둠에서 친구 설명을 듣고 적은 메모
   homeGroupCompleted: boolean;
 }
 
