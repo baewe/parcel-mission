@@ -19,6 +19,7 @@ interface SessionProgress {
   isSubmitted: boolean;
   selfCheck: SelfCheckRating;
   selfCheckBase: string | null; // '일부'·'다르다'를 고른 순간의 해석
+  thinkStartedAt: number | null; // 내 자료를 처음 본 시각 (혼자 생각할 시간 계산용)
   notes: Record<DocId, string>;
   hasVisitedPin: boolean;
   pinSolved: boolean;
@@ -38,6 +39,7 @@ const DEFAULT_PROGRESS: SessionProgress = {
   isSubmitted: false,
   selfCheck: null,
   selfCheckBase: null,
+  thinkStartedAt: null,
   notes: { '1': '', '2': '', '3': '', '4': '' },
   hasVisitedPin: false,
   pinSolved: false,
@@ -260,6 +262,10 @@ export default function App() {
               isSubmitted={progress.isSubmitted}
               selfCheck={progress.selfCheck}
               selfCheckBase={progress.selfCheckBase}
+              thinkStartedAt={progress.thinkStartedAt}
+              onThinkStart={(at) =>
+                setProgress((prev) => (prev.thinkStartedAt ? prev : { ...prev, thinkStartedAt: at }))
+              }
               onInterpretationChange={(val) =>
                 setProgress((prev) => ({ ...prev, interpretation: val }))
               }

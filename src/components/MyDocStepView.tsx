@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Send,
   Users,
@@ -21,6 +21,8 @@ interface MyDocStepViewProps {
   isSubmitted: boolean;
   selfCheck: SelfCheckRating;
   selfCheckBase: string | null;
+  thinkStartedAt: number | null;
+  onThinkStart: (at: number) => void;
   onInterpretationChange: (value: string) => void;
   onSubmitInterpretation: () => void;
   onSelectSelfCheck: (rating: Exclude<SelfCheckRating, null>, base: string | null) => void;
@@ -35,6 +37,8 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   isSubmitted,
   selfCheck,
   selfCheckBase,
+  thinkStartedAt,
+  onThinkStart,
   onInterpretationChange,
   onSubmitInterpretation,
   onSelectSelfCheck,
@@ -48,6 +52,24 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   const canProceedExpert =
     isSubmitted && selfCheck !== null && interpretation.trim().length > 0 && (selfCheck === 'same' || isRevised);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // 혼자 생각할 시간: 자료를 처음 본 뒤 1분이 지나야 제출됨 (남은 시간은 보여 주지 않음)
+  const THINK_MS = 60_000;
+  const [tooEarly, setTooEarly] = useState(false);
+  useEffect(() => {
+    if (!isSubmitted && !thinkStartedAt) onThinkStart(Date.now());
+  }, [isSubmitted, thinkStartedAt, onThinkStart]);
+
+  const handleSubmit = () => {
+    const started = thinkStartedAt ?? Date.now();
+    if (Date.now() - started < THINK_MS) {
+      setTooEarly(true);
+      textareaRef.current?.focus();
+      return;
+    }
+    setTooEarly(false);
+    onSubmitInterpretation();
+  };
 
   const focusInterpretation = () => {
     textareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -120,7 +142,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
           <button
             type="button"
             disabled={!canSubmit}
-            onClick={onSubmitInterpretation}
+            onClick={handleSubmit}
             className={`w-full min-h-[48px] py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all mt-2 ${
               canSubmit
                 ? 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
@@ -128,8 +150,13 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             }`}
           >
             <Send className="w-4 h-4" />
-            <span>{canSubmit ? '해석 제출하고 모범 해설 보기' : '해석을 입력해야 제출할 수 있어요'}</span>
+            <span>{canSubmit ? '해석 제출하기' : '해석을 입력해야 제출할 수 있어요'}</span>
           </button>
+        )}
+        {!isSubmitted && tooEarly && (
+          <p className="text-xs leading-relaxed text-navy border-l-4 border-sun bg-white px-3 py-2">
+            <b>조금 더 생각해 볼까요?</b> 자료를 다시 살펴보고, 눈에 띄는 단서를 하나 더 찾아 적어 보세요.
+          </p>
         )}
       </div>
 
