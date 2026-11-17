@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { BoxId, DELIVERY_BOXES, DeliveryBox, DocId, DOC_METAS } from '../data';
 import { FullScreenClueModal } from './FullScreenClueModal';
+import { AbsentBoxSheet } from './AbsentBoxSheet';
 
 interface HomeGroupMapViewProps {
   myBox: DeliveryBox;
@@ -305,7 +306,7 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
                     onClick={() => setSelfStudyBoxId(targetBox.id)}
                     className="text-[11px] text-navy/60 underline underline-offset-2 cursor-pointer"
                   >
-                    설명해 줄 친구가 없나요? 자료 보기
+                    친구가 결석했나요? 예시 답안 보기
                   </button>
                 </div>
               )}
@@ -382,13 +383,15 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
       )}
 
       {selfStudyBox && (
-        <FullScreenClueModal
-          isOpen
+        <AbsentBoxSheet
           box={selfStudyBox}
-          title={`${selfStudyBox.codeName} 자료`}
-          memo={{
-            value: friendNotes[selfStudyBox.id] || '',
-            onChange: (val) => onFriendNoteChange(selfStudyBox.id, val),
+          onMarkOnMap={() => {
+            onGuessBox(selfStudyBox.id, selfStudyBox.pinNumber);
+            if (!(friendNotes[selfStudyBox.id] || '').trim()) {
+              onFriendNoteChange(selfStudyBox.id, '(자료와 예시 답안으로 확인)');
+            }
+            setPending((prev) => ({ ...prev, [selfStudyBox.id]: undefined }));
+            setSelfStudyBoxId(null);
           }}
           onClose={() => setSelfStudyBoxId(null)}
         />

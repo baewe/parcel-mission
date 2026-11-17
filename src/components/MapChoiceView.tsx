@@ -238,12 +238,6 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
         </button>
       </div>
 
-      {/* Instruction strip */}
-      <div className="text-[11px] text-stone-700 bg-amber-50/90 px-3 py-1.5 rounded-lg border border-amber-200/90 mb-2 flex items-center justify-between">
-        <span>번호를 누르면 그곳이 확대돼요</span>
-        <span className="font-bold">적도: 흰 점선</span>
-      </div>
-
       {/* Leaflet Satellite Map (Label-free) */}
       <div className="relative isolate z-0 w-full h-[46vh] md:h-[58vh] min-h-[310px] max-h-[420px] md:max-h-[640px] rounded-2xl overflow-hidden border border-amber-900/40">
         <div ref={mapContainerRef} className="w-full h-full" />
@@ -254,6 +248,9 @@ export const MapChoiceView: React.FC<MapChoiceViewProps> = ({
         >
           전체 보기
         </button>
+        <span className="absolute top-3 right-3 z-[500] px-2 py-1 rounded bg-navy/80 text-white text-[11px] font-bold pointer-events-none">
+          - - - 적도
+        </span>
       </div>
 
       {/* Quick Number Buttons ①~⑤ */}

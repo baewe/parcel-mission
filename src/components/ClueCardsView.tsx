@@ -188,9 +188,6 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
 
       {/* CTA Button to Step 3 */}
       <div className="mt-5 space-y-2">
-        <p className="text-center text-xs text-navy/70">
-          모둠원과 단서를 충분히 분석한 뒤 지도로 넘어가세요. (단서 2개 이상)
-        </p>
         <button
           type="button"
           onClick={onProceedToPin}
@@ -204,7 +201,7 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
           <MapPin className="w-4 h-4" />
           <span>
             {completedNotesCount < 2
-              ? '단서를 2개 이상 분석하면 넘어갈 수 있어요'
+              ? '단서를 충분히 분석한 후 넘어갈 수 있어요'
               : '3단계: 지도에서 배송지 고르기 (1~5)'}
           </span>
         </button>
