@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { BookOpen, Check, RefreshCw, X } from 'lucide-react';
-import { BoxId, DocId, DOC_METAS, TEXTBOOK_URL } from '../data';
+import { BookOpen, Check, RefreshCw } from 'lucide-react';
+import { BoxId, DocId, DOC_METAS } from '../data';
+import { TextbookViewer } from './TextbookViewer';
 
 export type StepType =
   | 'my_doc'
@@ -38,11 +39,7 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
 }) => {
   const docMeta = DOC_METAS[docId];
   const [isTextbookOpen, setIsTextbookOpen] = useState(false);
-
-  const openTextbook = () => {
-    if (TEXTBOOK_URL) window.open(TEXTBOOK_URL, '_blank', 'noopener');
-    else setIsTextbookOpen(true);
-  };
+  const openTextbook = () => setIsTextbookOpen(true);
   const currentIdx = STEP_LIST.findIndex((s) => s.key === currentStep);
 
   // Allow clicking any completed step or the step immediately following the last completed step
@@ -70,7 +67,6 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
         >
           <BookOpen className="w-3.5 h-3.5" />
           <span>자료(교과서)</span>
-          {!TEXTBOOK_URL && <span className="font-medium">· 제작 중</span>}
         </button>
       </div>
 
@@ -127,28 +123,7 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
           })}
         </div>
       </div>
-      {isTextbookOpen && (
-        <div
-          className="fixed inset-0 z-[2000] bg-navy/80 flex items-center justify-center p-4"
-          onClick={() => setIsTextbookOpen(false)}
-        >
-          <div
-            className="bg-white rounded-2xl p-5 w-full max-w-sm text-center space-y-3"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <BookOpen className="w-8 h-8 mx-auto text-navy" />
-            <p className="font-display text-xl text-navy">교과서는 지금 만드는 중이에요</p>
-            <p className="text-sm text-navy/70">완성되면 이 버튼을 눌러 바로 볼 수 있어요.</p>
-            <button
-              type="button"
-              onClick={() => setIsTextbookOpen(false)}
-              className="w-full min-h-[44px] rounded-xl bg-sun text-navy font-bold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <X className="w-4 h-4" /> 닫기
-            </button>
-          </div>
-        </div>
-      )}
+      <TextbookViewer isOpen={isTextbookOpen} onClose={() => setIsTextbookOpen(false)} />
     </header>
   );
 };

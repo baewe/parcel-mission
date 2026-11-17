@@ -187,23 +187,17 @@ export const ClueCardsView: React.FC<ClueCardsViewProps> = ({
       </div>
 
       {/* CTA Button to Step 3 */}
-      <div className="mt-5">
+      <div className="mt-5 space-y-2">
+        <p className="text-center text-xs text-navy/70">
+          모둠원과 단서를 충분히 분석한 뒤 지도로 넘어가세요.
+        </p>
         <button
           type="button"
           onClick={onProceedToPin}
-          disabled={completedNotesCount < 4}
-          className={`w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
-            completedNotesCount < 4
-              ? 'bg-white border border-navy/20 text-navy/40 cursor-not-allowed'
-              : 'bg-sun text-navy active:scale-[0.98] cursor-pointer'
-          }`}
+          className="w-full min-h-[52px] py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all bg-sun text-navy active:scale-[0.98] cursor-pointer"
         >
           <MapPin className="w-4 h-4" />
-          <span>
-            {completedNotesCount < 4
-              ? `단서 4개를 모두 적으면 지도로 넘어갈 수 있어요 (${completedNotesCount}/4)`
-              : '3단계: 지도에서 배송지 고르기 (1~5)'}
-          </span>
+          <span>3단계: 지도에서 배송지 고르기 (1~5)</span>
         </button>
       </div>
     </div>

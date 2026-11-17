@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import {
   Send,
   Users,
@@ -20,9 +20,10 @@ interface MyDocStepViewProps {
   interpretation: string;
   isSubmitted: boolean;
   selfCheck: SelfCheckRating;
+  selfCheckBase: string | null;
   onInterpretationChange: (value: string) => void;
   onSubmitInterpretation: () => void;
-  onSelectSelfCheck: (rating: Exclude<SelfCheckRating, null>) => void;
+  onSelectSelfCheck: (rating: Exclude<SelfCheckRating, null>, base: string | null) => void;
   onGoToExpertGroup: () => void;
 }
 
@@ -33,6 +34,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   interpretation,
   isSubmitted,
   selfCheck,
+  selfCheckBase,
   onInterpretationChange,
   onSubmitInterpretation,
   onSelectSelfCheck,
@@ -41,14 +43,10 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   const docMeta = DOC_METAS[docId];
   const modelAnswer = box.docs[docId].model;
   const canSubmit = interpretation.trim().length > 0;
-  // '같다'를 골라야만 전문가 모둠으로 이동
-  const canProceedExpert = isSubmitted && selfCheck === 'same' && interpretation.trim().length > 0;
-
-  // '일부'·'다르다'를 고른 순간의 해석. 이 내용에서 고쳐 써야 '같다'를 고를 수 있음
-  const [revisionBase, setRevisionBase] = useState<string | null>(
-    selfCheck === 'partial' || selfCheck === 'different' ? interpretation : null
-  );
-  const [needsRevisionWarning, setNeedsRevisionWarning] = useState(false);
+  // '일부'·'다르다'를 고른 순간의 해석 (App에 저장). 이 내용에서 고쳐 써야 넘어갈 수 있음
+  const isRevised = selfCheckBase === null || interpretation.trim() !== selfCheckBase.trim();
+  const canProceedExpert =
+    isSubmitted && selfCheck !== null && interpretation.trim().length > 0 && (selfCheck === 'same' || isRevised);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const focusInterpretation = () => {
@@ -57,21 +55,8 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
   };
 
   const chooseSelfCheck = (rating: 'same' | 'partial' | 'different') => {
-    if (rating === 'same') {
-      if (revisionBase !== null && interpretation.trim() === revisionBase.trim()) {
-        setNeedsRevisionWarning(true);
-        focusInterpretation();
-        return;
-      }
-      setRevisionBase(null);
-      setNeedsRevisionWarning(false);
-      onSelectSelfCheck('same');
-      return;
-    }
-    setRevisionBase(interpretation);
-    setNeedsRevisionWarning(false);
-    onSelectSelfCheck(rating);
-    focusInterpretation();
+    onSelectSelfCheck(rating, rating === 'same' ? null : interpretation);
+    if (rating !== 'same') focusInterpretation();
   };
 
   return (
@@ -169,7 +154,7 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
                 자기 점검: 모범 해설과 내 해석을 비교해 보세요
               </h3>
               <p className="text-[11px] text-stone-600 mt-0.5">
-                '같다'를 골라야 전문가 모둠으로 이동할 수 있어요.
+                모범 해설과 내 해석이 얼마나 같은지 스스로 판단해 고르세요.
               </p>
             </div>
 
@@ -214,19 +199,15 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
               </button>
             </div>
 
-            {needsRevisionWarning ? (
-              <div className="border-l-4 border-rust bg-white px-3 py-2.5 text-xs leading-relaxed text-navy">
-                <b>아직 해석이 그대로예요.</b> 위 칸에서 내 해석을 보완한 뒤 '같다'를 다시 눌러 주세요.
-              </div>
-            ) : selfCheck === 'partial' ? (
+            {selfCheck === 'partial' ? (
               <div className="border-l-4 border-sun bg-white px-3 py-2.5 text-xs leading-relaxed text-navy">
                 <b>빠진 부분을 채워 볼까요?</b> 모범 해설에는 있지만 내 해석에는 없는 내용을 찾아 보세요.
-                자료에서 <b>무엇을 보았는지</b>와 그것이 <b>어떤 기후·지역을 뜻하는지</b>까지 적은 뒤 '같다'를 골라 주세요.
+                자료에서 <b>무엇을 보았는지</b>와 그것이 <b>어떤 기후·지역을 뜻하는지</b>까지 적어 해석을 보완해 보세요.
               </div>
             ) : selfCheck === 'different' ? (
               <div className="border-l-4 border-rust bg-white px-3 py-2.5 text-xs leading-relaxed text-navy">
                 <b>근거부터 다시 찾아볼까요?</b> 모범 해설이 자료의 어느 부분을 보고 판단했는지 확인해 보세요.
-                그 근거를 바탕으로 내 해석을 다시 쓴 뒤 '같다'를 골라 주세요.
+                그 근거를 바탕으로 내 해석을 다시 써 보세요.
               </div>
             ) : null}
           </div>
@@ -246,9 +227,9 @@ export const MyDocStepView: React.FC<MyDocStepViewProps> = ({
             <span>
               {canProceedExpert
                 ? '전문가 집단 모이기 (단서 4개 모두 보기)'
-                : selfCheck === 'partial' || selfCheck === 'different'
-                ? '해석을 보완하고 \'같다\'를 고르면 이동할 수 있어요'
-                : '자기 점검에서 \'같다\'를 골라 주세요'}
+                : selfCheck === null
+                ? '자기 점검 후에 넘어갈 수 있어요'
+                : '해석을 보완한 뒤 넘어갈 수 있어요'}
             </span>
           </button>
         </div>

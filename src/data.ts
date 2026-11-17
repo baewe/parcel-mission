@@ -10,8 +10,13 @@
  * 지도 번호는 위치 순서(북쪽 → 남쪽)로 매김
  */
 
-// 교과서 주소 (완성되면 여기에 링크를 넣으면 상단바 '교과서' 버튼이 바로 열림)
-export const TEXTBOOK_URL = '';
+// 교과서 쪽 이미지 (public/textbook 폴더). 쪽을 바꾸려면 이미지 파일만 교체하면 됨
+export const TEXTBOOK_PAGES = [
+  { src: '/textbook/page-1.png', title: '1쪽 · 위치와 지역 구분' },
+  { src: '/textbook/page-2.png', title: '2쪽 · 아프리카의 지형' },
+  { src: '/textbook/page-3.png', title: '3쪽 · 아프리카의 기후' },
+  { src: '/textbook/page-4.png', title: '4쪽 · 아프리카의 생활 문화' },
+];
 
 export type BoxId = 'A' | 'B' | 'C' | 'D' | 'E';
 export type DocId = '1' | '2' | '3' | '4';
@@ -104,7 +109,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image7.png',
         observation: '',
-        model: '폭이 넓은 큰 강을 사이에 두고 이웃 나라의 수도와 마주 보고 있는 도시입니다. 교과서 72쪽 지도에서 큰 강을 사이에 두고 두 나라의 수도가 맞붙어 있는 곳을 찾아보면 중앙아프리카에 있습니다.',
+        model: '폭이 넓은 큰 강을 사이에 두고 이웃 나라의 수도와 마주 보고 있는 도시입니다. 큰 강을 사이에 두고 두 나라의 수도가 마주 보고 있는 곳은 적도 부근의 큰 강가로, 교과서 2쪽의 콩고강이 흐르는 중앙아프리카에 있습니다.',
         credit: '',
       },
     },
@@ -145,7 +150,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image15.png',
         observation: '',
-        model: '이 나라의 서쪽 해안과 동쪽 해안이 서로 다른 대양에 맞닿아 있다고 합니다. 교과서 72쪽 지도에서 서쪽은 대서양, 동쪽은 인도양에 모두 접한 나라를 찾으면 대륙의 남쪽 끝에 있습니다.',
+        model: '이 나라의 서쪽 해안과 동쪽 해안이 서로 다른 대양에 맞닿아 있다고 합니다. 교과서 1쪽 지도에서 서쪽은 대서양, 동쪽은 인도양에 모두 접한 나라를 찾으면 대륙의 남쪽 끝에 있습니다.',
         credit: '사진: pixabay 무료이미지',
       },
     },
@@ -174,7 +179,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '2': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image16.png',
         observation: '',
-        model: '연강수량이 24mm이고 거의 모든 달의 강수량이 10mm에 못 미칩니다. 비가 거의 내리지 않으므로 건조 기후이며, 교과서 75쪽의 건조 기후 지역 그래프와 모양이 비슷합니다.',
+        model: '연강수량이 24mm이고 거의 모든 달의 강수량이 10mm에 못 미칩니다. 비가 거의 내리지 않으므로 건조 기후이며, 교과서 3쪽에 따르면 건조 기후는 북부의 사하라 사막과 남부의 나미브·칼라하리 사막에 나타납니다.',
         credit: '자료: weatherandclimate.eu, 카이로 국제공항 관측소(WMO 62366) 자료 바탕으로 작성',
       },
       '3': {
@@ -227,7 +232,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image14.png',
         observation: '이 지역 토착민 부족의 전통 의상입니다.',
-        model: '붉은색 천과 화려한 구슬 장신구가 특징인 전통 의상입니다. 교과서 76쪽에 실린 동부 아프리카 마사이족의 전통 의상과 모습이 비슷합니다.',
+        model: '붉은색 천과 화려한 구슬 장신구가 특징인 전통 의상입니다. 교과서 4쪽에 소개된 동부 아프리카 마사이족의 전통 의상과 모습이 비슷합니다.',
         credit: '사진: Mrinal Mohit, 「Maasai dancer in Loita Hills, Kenya」(2017), Wikimedia Commons, CC BY-SA 4.0',
       },
     },
@@ -268,7 +273,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image17.png',
         observation: '',
-        model: '일자리를 찾아 사람들이 몰려들어 인구가 빠르게 늘었고, 아프리카에서 인구가 가장 많은 대도시 가운데 하나라고 합니다. 교과서 73쪽에서 인구가 많은 대도시가 있다고 소개한 지역은 서부 아프리카입니다.',
+        model: '일자리를 찾아 사람들이 몰려들어 인구가 빠르게 늘었고, 아프리카에서 인구가 가장 많은 대도시 가운데 하나라고 합니다. 교과서 1쪽에서 인구가 많은 대도시가 발달했다고 소개한 지역은 서부 아프리카입니다.',
         credit: '',
       },
     },

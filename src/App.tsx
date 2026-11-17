@@ -18,6 +18,7 @@ interface SessionProgress {
   interpretation: string;
   isSubmitted: boolean;
   selfCheck: SelfCheckRating;
+  selfCheckBase: string | null; // '일부'·'다르다'를 고른 순간의 해석
   notes: Record<DocId, string>;
   hasVisitedPin: boolean;
   pinSolved: boolean;
@@ -36,6 +37,7 @@ const DEFAULT_PROGRESS: SessionProgress = {
   interpretation: '',
   isSubmitted: false,
   selfCheck: null,
+  selfCheckBase: null,
   notes: { '1': '', '2': '', '3': '', '4': '' },
   hasVisitedPin: false,
   pinSolved: false,
@@ -197,7 +199,10 @@ export default function App() {
     my_doc: progress.isSubmitted,
     self_check:
       progress.isSubmitted &&
-      progress.selfCheck === 'same' &&
+      progress.selfCheck !== null &&
+      (progress.selfCheck === 'same' ||
+        progress.selfCheckBase === null ||
+        progress.interpretation.trim() !== progress.selfCheckBase.trim()) &&
       (progress.currentStep !== 'my_doc' && progress.currentStep !== 'self_check' ||
         progress.hasVisitedPin ||
         progress.pinSolved),
@@ -231,6 +236,7 @@ export default function App() {
               interpretation={progress.interpretation}
               isSubmitted={progress.isSubmitted}
               selfCheck={progress.selfCheck}
+              selfCheckBase={progress.selfCheckBase}
               onInterpretationChange={(val) =>
                 setProgress((prev) => ({ ...prev, interpretation: val }))
               }
@@ -241,8 +247,8 @@ export default function App() {
                   currentStep: 'self_check',
                 }))
               }
-              onSelectSelfCheck={(rating) =>
-                setProgress((prev) => ({ ...prev, selfCheck: rating }))
+              onSelectSelfCheck={(rating, base) =>
+                setProgress((prev) => ({ ...prev, selfCheck: rating, selfCheckBase: base }))
               }
               onGoToExpertGroup={() =>
                 setProgress((prev) => {
