@@ -38,9 +38,16 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<number, L.Marker>>({});
-  const hasCelebratedRef = useRef<boolean>(false);
+  // 이미 다 맞힌 상태로 다시 들어오면 축하 알림을 다시 띄우지 않음
+  const hasCelebratedRef = useRef<boolean>(
+    ALL_BOXES.filter((b) => b.id !== myBox.id).every((b) => guesses[b.id] === b.pinNumber)
+  );
 
   const [isClueModalOpen, setIsClueModalOpen] = useState<boolean>(false);
+  const [showDoneOverlay, setShowDoneOverlay] = useState<boolean>(false);
+  // 설명할 친구가 없는 택배: 그 택배의 자료를 직접 보기
+  const [selfStudyBoxId, setSelfStudyBoxId] = useState<BoxId | null>(null);
+  const selfStudyBox = selfStudyBoxId ? DELIVERY_BOXES[selfStudyBoxId] : null;
   // 고르기만 한 번호 (정답 확인 전)
   const [pending, setPending] = useState<Partial<Record<BoxId, number>>>({});
 
@@ -63,6 +70,8 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
     if (isAllFinished && !hasCelebratedRef.current) {
       hasCelebratedRef.current = true;
       onAllGuessed();
+      setShowDoneOverlay(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       try {
         confetti({
           particleCount: 100,
@@ -194,6 +203,13 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
 
       </div>
 
+      {isAllFinished && (
+        <div className="bg-leaf rounded-2xl px-4 py-6 text-center text-navy border-2 border-navy">
+          <p className="font-display text-3xl md:text-4xl leading-tight">모든 택배의 주소를 찾았어요!</p>
+          <p className="text-sm mt-2">지도에 아프리카 다섯 도시의 위치와 이름이 모두 표시되었어요.</p>
+        </div>
+      )}
+
       {/* 내 택배 + 내가 적은 단서 노트 (친구들에게 설명할 때 보는 곳) */}
       <div className="bg-white rounded-2xl p-4 space-y-3 border-4 border-sun">
         <div className="flex items-start justify-between gap-2">
@@ -213,14 +229,16 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
           </button>
         </div>
         <ul className="space-y-2">
-          {(['1', '2', '3', '4'] as DocId[]).map((dId) => (
-            <li key={dId} className="text-sm text-navy leading-relaxed">
-              <span className="inline-block font-bold text-xs bg-sun text-navy px-1.5 py-0.5 rounded mr-1.5">
-                {DOC_METAS[dId].label}
-              </span>
-              {notes[dId]?.trim() ? notes[dId] : <span className="text-navy/40">(적은 내용 없음)</span>}
-            </li>
-          ))}
+          {(['1', '2', '3', '4'] as DocId[])
+            .filter((dId) => notes[dId]?.trim())
+            .map((dId) => (
+              <li key={dId} className="text-sm text-navy leading-relaxed">
+                <span className="inline-block font-bold text-xs bg-sun text-navy px-1.5 py-0.5 rounded mr-1.5">
+                  {DOC_METAS[dId].label}
+                </span>
+                {notes[dId]}
+              </li>
+            ))}
         </ul>
       </div>
 
@@ -229,12 +247,6 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 
-      {isAllFinished && (
-        <div className="bg-leaf rounded-2xl p-4 text-center text-navy">
-          <p className="font-display text-xl">원모둠 미션 완료!</p>
-          <p className="text-xs mt-1">지도에 아프리카 다섯 도시의 위치와 이름이 모두 표시되었어요.</p>
-        </div>
-      )}
 
       {/* 나머지 4개 택배 */}
       <div className="space-y-2.5">
@@ -286,6 +298,18 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
                 className="w-full text-sm p-2.5 mb-2 rounded-lg border border-navy/25 bg-white text-navy placeholder:text-navy/40 focus:outline-none focus:border-navy resize-none"
               />
 
+              {!solved && (
+                <div className="-mt-1 mb-2 text-right">
+                  <button
+                    type="button"
+                    onClick={() => setSelfStudyBoxId(targetBox.id)}
+                    className="text-[11px] text-navy/60 underline underline-offset-2 cursor-pointer"
+                  >
+                    설명해 줄 친구가 없나요? 자료 보기
+                  </button>
+                </div>
+              )}
+
               <div className="grid grid-cols-5 gap-1.5">
                 {PIN_ORDER.map((pinBox) => {
                   const locked = !solved && !hasMemo(targetBox);
@@ -334,17 +358,41 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
         </button>
       )}
 
-      {/* Reset Mission Button */}
-      <div className="pt-2">
-        <button
-          type="button"
-          onClick={onResetAll}
-          className="w-full min-h-[46px] py-2.5 px-4 rounded-xl bg-white text-navy font-bold text-xs flex items-center justify-center gap-2 border border-navy/30 cursor-pointer"
+      {showDoneOverlay && (
+        <div
+          className="fixed inset-0 z-[2000] bg-navy/85 flex items-center justify-center p-6"
+          onClick={() => setShowDoneOverlay(false)}
         >
-          <RotateCcw className="w-4 h-4" />
-          <span>새로운 택배·자료로 처음부터 다시하기</span>
-        </button>
-      </div>
+          <div className="bg-white rounded-3xl px-6 py-10 w-full max-w-lg text-center space-y-4" onClick={(e) => e.stopPropagation()}>
+            <p className="font-display text-4xl md:text-5xl text-navy leading-tight">
+              모든 택배의
+              <br />
+              주소를 찾았어요!
+            </p>
+            <p className="text-sm text-navy/70">다섯 도시가 모두 지도에 표시되었어요.</p>
+            <button
+              type="button"
+              onClick={() => setShowDoneOverlay(false)}
+              className="w-full min-h-[52px] rounded-xl bg-sun text-navy font-bold text-base cursor-pointer"
+            >
+              지도 보기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {selfStudyBox && (
+        <FullScreenClueModal
+          isOpen
+          box={selfStudyBox}
+          title={`${selfStudyBox.codeName} 자료`}
+          memo={{
+            value: friendNotes[selfStudyBox.id] || '',
+            onChange: (val) => onFriendNoteChange(selfStudyBox.id, val),
+          }}
+          onClose={() => setSelfStudyBoxId(null)}
+        />
+      )}
 
       <FullScreenClueModal
         isOpen={isClueModalOpen}

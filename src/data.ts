@@ -91,7 +91,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '1': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image11.jpg',
         observation: '이 나라의 큰 강 상류 쪽에 펼쳐진 숲입니다.',
-        model: '키 큰 나무와 풀이 빽빽하게 자란 숲이 보이므로 열대 우림입니다. 교과서는 열대 우림이 발달한 곳으로 중앙아프리카를 소개합니다.',
+        model: '키 큰 나무와 풀이 빽빽하게 자란 숲이 보이므로 열대 우림입니다. 열대 우림은 중앙아프리카에 넓게 펼쳐져 있습니다.',
         credit: '사진: Anand Osuri, 「Tropical rainforest Agumbe」(2011), Wikimedia Commons, CC BY-SA 4.0',
       },
       '2': {
@@ -103,13 +103,13 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '3': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image10.jpg',
         observation: '이 나라의 한 농업 시설에 있는 건물입니다.',
-        model: '풀과 나무 같은 주변 재료로 지붕을 덮은 건물입니다. 교과서는 고온 다습한 지역에서 풀과 나무, 흙으로 집을 짓는다고 설명합니다. 덥고 비가 많은 지역이므로 건조 기후인 북부와 온대 기후인 남부는 제외됩니다.',
+        model: '풀과 나무 같은 주변 재료로 지붕을 덮은 건물입니다. 덥고 비가 많은 지역에서는 풀과 나무로 집을 짓고, 빗물이 잘 흘러내리도록 지붕의 경사를 급하게 만듭니다. 덥고 비가 많은 지역이므로 건조 기후인 북부와 온대 기후인 남부는 제외됩니다.',
         credit: '사진: Ken Wiegand/USAID, Pixnio, CC0 (퍼블릭 도메인)',
       },
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image7.png',
         observation: '',
-        model: '폭이 넓은 큰 강을 사이에 두고 이웃 나라의 수도와 마주 보고 있는 도시입니다. 큰 강을 사이에 두고 두 나라의 수도가 마주 보고 있는 곳은 적도 부근의 큰 강가로, 교과서 2쪽의 콩고강이 흐르는 중앙아프리카에 있습니다.',
+        model: '폭이 넓은 큰 강을 사이에 두고 이웃 나라의 수도와 마주 보고 있는 도시입니다. 적도 부근의 콩고 분지에는 콩고강이 흐르며, 이 지역은 중앙아프리카에 속합니다.',
         credit: '',
       },
     },
@@ -132,7 +132,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '1': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image12.png',
         observation: '항구 주변의 건물들은 일찍부터 이곳에 들어온 유럽인의 영향을 받은 유럽풍 건물입니다.',
-        model: '해안의 항구 주변에 유럽풍 건물이 늘어서 있습니다. 교과서는 해안을 따라 온대 기후가 나타나 일찍부터 유럽인이 진출한 곳으로 남부 아프리카를 소개합니다.',
+        model: '해안의 항구 주변에 유럽풍 건물이 늘어서 있습니다. 남부 아프리카는 해안을 따라 온대 기후가 나타나 일찍부터 유럽인이 진출했습니다.',
         credit: '사진: Andreas Tusche, 「Cape Town Waterfront」(2004), Wikimedia Commons, GFDL 1.2',
       },
       '2': {
@@ -150,7 +150,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image15.png',
         observation: '',
-        model: '이 나라의 서쪽 해안과 동쪽 해안이 서로 다른 대양에 맞닿아 있다고 합니다. 교과서 1쪽 지도에서 서쪽은 대서양, 동쪽은 인도양에 모두 접한 나라를 찾으면 대륙의 남쪽 끝에 있습니다.',
+        model: '이 나라의 서쪽 해안과 동쪽 해안은 서로 다른 대양에 맞닿아 있습니다. 서쪽으로 대서양, 동쪽으로 인도양에 모두 접한 곳은 대륙의 남쪽 끝입니다.',
         credit: '사진: pixabay 무료이미지',
       },
     },
@@ -179,7 +179,7 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '2': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image16.png',
         observation: '',
-        model: '연강수량이 24mm이고 거의 모든 달의 강수량이 10mm에 못 미칩니다. 비가 거의 내리지 않으므로 건조 기후이며, 교과서 3쪽에 따르면 건조 기후는 북부의 사하라 사막과 남부의 나미브·칼라하리 사막에 나타납니다.',
+        model: '연강수량이 24mm이고 거의 모든 달의 강수량이 10mm에 못 미칩니다. 비가 거의 내리지 않으므로 건조 기후입니다. 아프리카에서 건조 기후는 북부의 사하라 사막과 남부의 나미브·칼라하리 사막에 나타납니다.',
         credit: '자료: weatherandclimate.eu, 카이로 국제공항 관측소(WMO 62366) 자료 바탕으로 작성',
       },
       '3': {
@@ -220,19 +220,19 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '2': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image18.jpg',
         observation: '이 도시는 비가 많이 오는 시기(우기)와 거의 오지 않는 시기(건기)가 뚜렷합니다.',
-        model: '키가 큰 풀이 자란 넓은 초원에 야생 동물이 살고 있습니다. 이런 초원은 우기와 건기가 뚜렷한 지역에 나타나며, 교과서는 야생 동식물이 사는 대표적인 초원으로 동부 아프리카의 세렝게티 초원을 소개합니다.',
+        model: '키가 큰 풀이 자란 넓은 초원에 야생 동물이 살고 있습니다. 이런 초원은 우기와 건기가 뚜렷한 지역에 나타나며, 동부 아프리카에는 야생 동물이 사는 넓은 초원이 펼쳐져 있습니다.',
         credit: '사진: Timothy A. Gonsalves, 「Buffalo Nairobi Skyline Savannah Kenya May19」(2019), Wikimedia Commons, CC BY-SA 4.0',
       },
       '3': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image3.png',
         observation: '',
-        model: '적도와 가까운데도 해발 약 1,700m의 높은 땅이어서 1년 내내 20℃ 안팎으로 선선하다고 합니다. 교과서는 기온이 선선하여 예부터 사람이 많이 모여 산 고원 지역이 동부 아프리카에 있다고 설명합니다.',
+        model: '적도와 가깝지만 해발 약 1,700m의 높은 땅이어서 1년 내내 20℃ 안팎으로 선선합니다. 동부 아프리카에는 기온이 선선하여 예부터 많은 사람이 모여 산 고원이 있습니다.',
         credit: '사진: pixabay 무료이미지',
       },
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image14.png',
         observation: '이 지역 토착민 부족의 전통 의상입니다.',
-        model: '붉은색 천과 화려한 구슬 장신구가 특징인 전통 의상입니다. 교과서 4쪽에 소개된 동부 아프리카 마사이족의 전통 의상과 모습이 비슷합니다.',
+        model: '붉은색 천과 화려한 구슬 장신구가 특징인 전통 의상입니다. 붉은 천과 구슬 장신구는 동부 아프리카 마사이족의 전통 의상입니다.',
         credit: '사진: Mrinal Mohit, 「Maasai dancer in Loita Hills, Kenya」(2017), Wikimedia Commons, CC BY-SA 4.0',
       },
     },
@@ -267,13 +267,13 @@ export const DELIVERY_BOXES: Record<BoxId, DeliveryBox> = {
       '3': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image19.png',
         observation: '',
-        model: '컨테이너가 높이 쌓여 있고 화물선이 정박해 있어 바닷길을 이용한 무역이 활발한 곳입니다. 교과서는 해안 지역에서 수출 산업을 중심으로 경제 활동이 활발한 곳으로 서부 아프리카를 소개합니다.',
+        model: '컨테이너가 높이 쌓여 있고 화물선이 정박해 있어 바닷길을 이용한 무역이 활발한 곳입니다. 서부 아프리카는 해안 지역을 중심으로 자원 개발과 수출 산업이 활발합니다.',
         credit: '사진: scenar308 (Bernd S), 「Port Apapa Lagos Nigeria」, Wikimedia Commons, CC BY 2.0',
       },
       '4': {
         image: 'https://raw.githubusercontent.com/baewe/afri-express/main/images/image17.png',
         observation: '',
-        model: '일자리를 찾아 사람들이 몰려들어 인구가 빠르게 늘었고, 아프리카에서 인구가 가장 많은 대도시 가운데 하나라고 합니다. 교과서 1쪽에서 인구가 많은 대도시가 발달했다고 소개한 지역은 서부 아프리카입니다.',
+        model: '일자리를 찾아 사람들이 몰려들어 인구가 빠르게 늘었고, 아프리카에서 인구가 가장 많은 대도시 가운데 하나입니다. 인구가 많은 대도시가 발달한 지역은 서부 아프리카입니다.',
         credit: '',
       },
     },

@@ -9,7 +9,9 @@ interface TextbookViewerProps {
   onClose: () => void;
 }
 
-const PAGE_WIDTH = 1000; // 교과서 쪽 이미지 가로 크기(px)
+const PAGE_WIDTH = 1000; // 교과서 쪽 표시 크기(px)
+const PAGE_HEIGHT = 1440;
+const EDGE = 8;
 
 const ZoomButtons: React.FC<{ onZoomIn: () => void; onZoomOut: () => void; onFit: () => void }> = ({
   onZoomIn,
@@ -50,6 +52,42 @@ export const TextbookViewer: React.FC<TextbookViewerProps> = ({ isOpen, onClose 
     zoom.setTransform((w - PAGE_WIDTH * scale) / 2, 8, scale, animate ? 250 : 0);
   }, []);
 
+  // 위아래(좌우) 이동: 화면 밖으로 너무 나가지 않게 막음
+  const panBy = useCallback((dx: number, dy: number) => {
+    const area = areaRef.current;
+    const zoom = zoomRef.current;
+    if (!area || !zoom) return;
+    const { positionX, positionY, scale } = zoom.instance.state;
+    const w = area.clientWidth;
+    const h = area.clientHeight;
+    const cw = PAGE_WIDTH * scale;
+    const ch = PAGE_HEIGHT * scale;
+    const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+    const x = cw <= w ? (w - cw) / 2 : clamp(positionX - dx, w - cw - EDGE, EDGE);
+    const y = ch <= h ? EDGE : clamp(positionY - dy, h - ch - EDGE, EDGE);
+    zoom.setTransform(x, y, scale, 0);
+  }, []);
+
+  // 마우스 휠·트랙패드 두 손가락 스크롤 = 위아래 이동, Ctrl(⌘)+휠·트랙패드 집기 = 확대·축소
+  useEffect(() => {
+    if (!isOpen) return;
+    const area = areaRef.current;
+    if (!area) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const zoom = zoomRef.current;
+      if (!zoom) return;
+      if (e.ctrlKey || e.metaKey) {
+        if (e.deltaY < 0) zoom.zoomIn(0.15, 0);
+        else zoom.zoomOut(0.15, 0);
+      } else {
+        panBy(e.shiftKey ? e.deltaY : e.deltaX, e.shiftKey ? 0 : e.deltaY);
+      }
+    };
+    area.addEventListener('wheel', onWheel, { passive: false });
+    return () => area.removeEventListener('wheel', onWheel);
+  }, [isOpen, page, panBy]);
+
   useEffect(() => {
     if (!isOpen) return;
     const onResize = () => fitWidth(false);
@@ -66,13 +104,15 @@ export const TextbookViewer: React.FC<TextbookViewerProps> = ({ isOpen, onClose 
       if (e.key === 'Escape') onClose();
       if (e.key === 'ArrowRight') setPage((p) => Math.min(total - 1, p + 1));
       if (e.key === 'ArrowLeft') setPage((p) => Math.max(0, p - 1));
+      if (e.key === 'ArrowDown') panBy(0, 120);
+      if (e.key === 'ArrowUp') panBy(0, -120);
     };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener('keydown', onKey);
     };
-  }, [isOpen, onClose, total]);
+  }, [isOpen, onClose, total, panBy]);
 
   if (!isOpen) return null;
   const current = TEXTBOOK_PAGES[page];
@@ -115,7 +155,7 @@ export const TextbookViewer: React.FC<TextbookViewerProps> = ({ isOpen, onClose 
         maxScale={4}
         limitToBounds={false}
         doubleClick={{ mode: 'zoomIn', step: 0.8 }}
-        wheel={{ step: 0.15 }}
+        wheel={{ disabled: true }}
         pinch={{ step: 5 }}
       >
         <div ref={areaRef} className="flex-1 min-h-0 bg-[#F4F4F4] relative">

@@ -23,7 +23,7 @@ interface HeaderStepperProps {
 const STEP_LIST: { key: StepType; label: string }[] = [
   { key: 'my_doc', label: '내자료' },
   { key: 'self_check', label: '점검' },
-  { key: 'clues', label: '단서4' },
+  { key: 'clues', label: '단서' },
   { key: 'pin', label: '배송지' },
   { key: 'address', label: '주소' },
   { key: 'home_group', label: '원모둠' },
@@ -66,7 +66,7 @@ export const HeaderStepper: React.FC<HeaderStepperProps> = ({
           className="flex items-center gap-1.5 text-xs font-bold text-navy bg-sun px-3 py-1.5 rounded shrink-0 cursor-pointer ml-auto"
         >
           <BookOpen className="w-3.5 h-3.5" />
-          <span>자료(교과서)</span>
+          <span>교과서 보기</span>
         </button>
       </div>
 

@@ -6,7 +6,9 @@ import { DocRenderer } from './DocRenderer';
 interface FullScreenClueModalProps {
   isOpen: boolean;
   box: DeliveryBox;
-  notes: Record<DocId, string>;
+  notes?: Record<DocId, string>; // 없으면 '내가 적은 메모' 칸을 숨김
+  title?: string;
+  memo?: { value: string; onChange: (value: string) => void }; // 자료를 보면서 바로 적는 메모 칸
   onClose: () => void;
 }
 
@@ -14,6 +16,8 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
   isOpen,
   box,
   notes,
+  title,
+  memo,
   onClose,
 }) => {
   const [activeTab, setActiveTab] = useState<DocId>('1');
@@ -40,7 +44,7 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-amber-300" />
           <h3 className="font-black text-sm">
-            {box.codeName} 단서 다시보기
+            {title ?? `${box.codeName} 단서 다시보기`}
           </h3>
         </div>
         <button
@@ -85,7 +89,23 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
             <DocRenderer box={box} docId={activeTab} />
           </div>
 
+          {memo && (
+            <div className="bg-white rounded-2xl border-2 border-sun p-3.5 space-y-1.5">
+              <span className="text-xs font-bold text-navy block">
+                메모
+              </span>
+              <textarea
+                value={memo.value}
+                onChange={(e) => memo.onChange(e.target.value)}
+                rows={3}
+                placeholder="자료를 보고 알게 된 점 (지역, 적도의 어느 쪽, 자연환경)"
+                className="w-full text-sm p-2.5 rounded-lg border border-navy/25 bg-white text-navy placeholder:text-navy/40 focus:outline-none focus:border-navy resize-none"
+              />
+            </div>
+          )}
+
           {/* Student's recorded note for this doc */}
+          {notes && (
           <div className="bg-[#FFFFFF] rounded-2xl border border-amber-800/25 p-3.5">
             <span className="text-xs font-bold text-amber-950 block mb-1">
               내가 적은 메모 ({DOC_METAS[activeTab].label})
@@ -94,6 +114,7 @@ export const FullScreenClueModal: React.FC<FullScreenClueModalProps> = ({
               {notes[activeTab]?.trim() ? notes[activeTab] : '아직 작성한 메모가 없습니다.'}
             </p>
           </div>
+          )}
         </div>
       </div>
 
