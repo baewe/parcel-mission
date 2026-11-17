@@ -293,9 +293,12 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
               <textarea
                 value={friendNotes[targetBox.id] || ''}
                 onChange={(e) => onFriendNoteChange(targetBox.id, e.target.value)}
-                readOnly={solved}
                 rows={2}
-                placeholder="친구가 말한 주소를 간단히 적어 보세요. (지역, 적도의 어느 쪽, 자연환경)"
+                placeholder={
+                  solved
+                    ? `예시 답안: 아프리카 ${targetBox.address.region}, 적도의 ${targetBox.address.equatorSide}, ${targetBox.address.environment}`
+                    : '친구가 말한 주소를 간단히 적어 보세요. (지역, 적도의 어느 쪽, 자연환경)'
+                }
                 className="w-full text-sm p-2.5 mb-2 rounded-lg border border-navy/25 bg-white text-navy placeholder:text-navy/40 focus:outline-none focus:border-navy resize-none"
               />
 
@@ -387,9 +390,6 @@ export const HomeGroupMapView: React.FC<HomeGroupMapViewProps> = ({
           box={selfStudyBox}
           onMarkOnMap={() => {
             onGuessBox(selfStudyBox.id, selfStudyBox.pinNumber);
-            if (!(friendNotes[selfStudyBox.id] || '').trim()) {
-              onFriendNoteChange(selfStudyBox.id, '(자료와 예시 답안으로 확인)');
-            }
             setPending((prev) => ({ ...prev, [selfStudyBox.id]: undefined }));
             setSelfStudyBoxId(null);
           }}
